@@ -27,15 +27,21 @@ public class FrameDataRecorder : MonoBehaviour
     public float timeElapsed;
     public int trialCount;
 
-    public string fullPath;
+    public string folder;
+    public string fileName;
 
-    public static bool blockIsRunning;
+    public bool blockIsRunning;
 
-    public MainSequence mainSequence;
+    MainSequence mainSequence;
     /*public bool blockIsCompleted;*/
     // Start is called before the first frame update
     void Start()
     {
+        mainSequence = GetComponent<MainSequence>();
+        mainSequence.onBlockStart.AddListener(startRecording);
+        mainSequence.onBlockFinish.AddListener(finishRecording);
+
+
         sequence = GenerateStimulusSequence(5, 10);
         Debug.Log(string.Join(", ", sequence.ToArray()));
 
@@ -48,26 +54,17 @@ public class FrameDataRecorder : MonoBehaviour
         blockDataTable.Columns.Add("Time Elapsed", typeof(float));
         blockDataTable.Columns.Add("Current Trial Number", typeof(int));
 
-        blockDataTable.Columns.Add("Block Running", typeof(bool));
-       /* blockDataTable.Columns.Add("Block Completed", typeof(string));*/
+        /*blockDataTable.Columns.Add("Block Running", typeof(bool));*/
+        /* blockDataTable.Columns.Add("Block Completed", typeof(string));*/
 
 
 
 
-/*        string folder = @"D:/Guandong/data/" + 1 + "_" + "GW";
-        string filename = System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
-
-        string fullPath = folder + '/' + filename;
-
-        if (!System.IO.Directory.Exists(folder))
-        {
-            System.IO.Directory.CreateDirectory(folder);
-        }*/
 
 
         /*ExperimentationSetup.SaveToCSV(table, fullPath);*/
-        blockIsRunning = false;
-        mainSequence.blockStartEvent;
+        /*    blockIsRunning = false;*/
+        /*mainSequence.blockStartEvent;*/
         /*blockIsCompleted = false;*/
 
     }
@@ -75,20 +72,35 @@ public class FrameDataRecorder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (blockIsRunning)
+        if (MainSequence.blockIsRunning)
         {
             Debug.Log('a');
             blockDataTable.Rows.Add(id, initial, age, gender, frameCount, timeElapsed, trialCount);
         }
-
-        /*       if (Input.GetKeyDown(KeyCode.Space))
-               { 
-                   blockIsRunning = true;
-               }   */
-
     }
 
+    void startRecording()
+    {
+        Debug.Log("start recording");
+        fileName =id + "_" + initial + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
+    }
 
+    void finishRecording()
+    {
+        folder = @"D:/Guandong/data/" + id + "_" + initial;
+
+        if (!System.IO.Directory.Exists(folder))
+        {
+            System.IO.Directory.CreateDirectory(folder);
+        }
+       
+        string fullPath = folder + '/' + fileName;
+        SaveToCSV(blockDataTable, fullPath);
+        blockDataTable.Rows.Clear();
+
+
+        Debug.Log("Save Data");
+    }
 
 
     public List<int> GenerateStimulusSequence(int numberOfDisks, int numberOfRepetitions)

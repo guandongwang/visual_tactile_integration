@@ -5,42 +5,52 @@ using UnityEngine.Events;
 
 public class MainSequence : MonoBehaviour
 {
-    UnityEvent blockStartEvent;
-    
-    /*public static bool blockIsRunning;*/
-    // Start is called before the first frame update
-  
+
+    public UnityEvent onBlockStart;
+    public UnityEvent onBlockFinish;
+
+    FrameDataRecorder frameDataRecorder;
+    public static bool blockIsRunning;
+
+
     void Start()
     {
-        if (blockStartEvent == null)
-            blockStartEvent = new UnityEvent();
+        frameDataRecorder = GetComponent<FrameDataRecorder>();
 
-        blockStartEvent.AddListener(blockStart);
+        if (onBlockStart == null)
+            onBlockStart = new UnityEvent();
 
+        onBlockStart.AddListener(beginTestingBlock);
+
+        blockIsRunning = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && blockStartEvent != null)
+        if (Input.GetKeyDown(KeyCode.Space) && onBlockStart != null && !blockIsRunning)
         {
-            blockStartEvent.Invoke();
+            blockIsRunning = true;
+            onBlockStart.Invoke();
+            
         }
     }
-    void blockStart() 
+    void beginTestingBlock()
     {
-        FrameDataRecorder.blockIsRunning = true;
         Debug.Log("start");
         StartCoroutine(experimentBlock());
-        
+
     }
 
 
     IEnumerator experimentBlock()
     {
+        Debug.Log("start coroutine");
         yield return new WaitForSeconds(2.5f);
-        FrameDataRecorder.blockIsRunning = false;
-        FrameDataRecorder.SaveToCSV(FrameDataRecorder.blockDataTable);
+        /*frameDataRecorder.blockIsRunning = false;*/
+        /*FrameDataRecorder.SaveToCSV(FrameDataRecorder.blockDataTable, fi);*/
+        blockIsRunning = false;
+        onBlockFinish.Invoke();
         Debug.Log("finish");
     }
 }
