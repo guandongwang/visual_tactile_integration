@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Valve.VR;
+/*using Valve.VR;*/
 using System.Text;
 using System.Data;
 using System.IO;
@@ -12,9 +12,8 @@ public class FrameDataRecorder : MonoBehaviour
 {
     public List<int> sequence;
 
-    public DataTable blockDataTable = new DataTable();
+    public static DataTable blockDataTable = new DataTable();
 
-    public Toggle experimentRunningToggle;
 
     //Subject Info
     public int id;
@@ -31,6 +30,8 @@ public class FrameDataRecorder : MonoBehaviour
     public string fullPath;
 
     public static bool blockIsRunning;
+
+    public MainSequence mainSequence;
     /*public bool blockIsCompleted;*/
     // Start is called before the first frame update
     void Start()
@@ -53,7 +54,7 @@ public class FrameDataRecorder : MonoBehaviour
 
 
 
-        string folder = @"D:/Guandong/data/" + 1 + "_" + "GW";
+/*        string folder = @"D:/Guandong/data/" + 1 + "_" + "GW";
         string filename = System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
 
         string fullPath = folder + '/' + filename;
@@ -61,11 +62,12 @@ public class FrameDataRecorder : MonoBehaviour
         if (!System.IO.Directory.Exists(folder))
         {
             System.IO.Directory.CreateDirectory(folder);
-        }
+        }*/
 
 
         /*ExperimentationSetup.SaveToCSV(table, fullPath);*/
         blockIsRunning = false;
+        mainSequence.blockStartEvent;
         /*blockIsCompleted = false;*/
 
     }
@@ -76,16 +78,15 @@ public class FrameDataRecorder : MonoBehaviour
         if (blockIsRunning)
         {
             Debug.Log('a');
-           /* blockDataTable.Rows.Add(id, initial, age, gender, frameCount, timeElapsed, trialCount);*/
+            blockDataTable.Rows.Add(id, initial, age, gender, frameCount, timeElapsed, trialCount);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        { 
-            blockIsRunning = true;
-        }   
+        /*       if (Input.GetKeyDown(KeyCode.Space))
+               { 
+                   blockIsRunning = true;
+               }   */
 
     }
-
 
 
 
