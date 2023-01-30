@@ -18,7 +18,15 @@ public class MainSequence : MonoBehaviour
         frameDataRecorder = GetComponent<FrameDataRecorder>();
 
         if (onBlockStart == null)
+        {
             onBlockStart = new UnityEvent();
+        }
+
+        if (onBlockFinish == null)
+        {
+            onBlockFinish = new UnityEvent();
+        }
+
 
         onBlockStart.AddListener(beginTestingBlock);
 
@@ -46,9 +54,19 @@ public class MainSequence : MonoBehaviour
     IEnumerator experimentBlock()
     {
         Debug.Log("start coroutine");
-        yield return new WaitForSeconds(2.5f);
-        /*frameDataRecorder.blockIsRunning = false;*/
-        /*FrameDataRecorder.SaveToCSV(FrameDataRecorder.blockDataTable, fi);*/
+
+        /*    for (frameDataRecorder.trialCount = 1; frameDataRecorder.trialCount < frameDataRecorder.stimulusSequence.Count + 1; frameDataRecorder.trialCount++)
+            {
+                Debug.Log(frameDataRecorder.stimulusSequence[frameDataRecorder.trialCount - 1]);
+                yield return new WaitForSeconds(.5f);
+            }*/
+        frameDataRecorder.trialCount = 0;
+
+        foreach (int stim in frameDataRecorder.stimulusSequence)
+        {
+            frameDataRecorder.trialCount += 1;
+            yield return new WaitForSeconds(.5f); 
+        }
         blockIsRunning = false;
         onBlockFinish.Invoke();
         Debug.Log("finish");

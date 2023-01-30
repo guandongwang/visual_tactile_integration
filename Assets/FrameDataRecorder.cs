@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public class FrameDataRecorder : MonoBehaviour
 {
-    public List<int> sequence;
+    public List<int> stimulusSequence;
 
     public static DataTable blockDataTable = new DataTable();
 
@@ -30,7 +30,7 @@ public class FrameDataRecorder : MonoBehaviour
     public string folder;
     public string fileName;
 
-    public bool blockIsRunning;
+   /* public bool blockIsRunning;*/
 
     MainSequence mainSequence;
     /*public bool blockIsCompleted;*/
@@ -42,8 +42,8 @@ public class FrameDataRecorder : MonoBehaviour
         mainSequence.onBlockFinish.AddListener(finishRecording);
 
 
-        sequence = GenerateStimulusSequence(5, 10);
-        Debug.Log(string.Join(", ", sequence.ToArray()));
+        stimulusSequence = GenerateStimulusSequence(5, 10);
+        Debug.Log(string.Join(", ", stimulusSequence.ToArray()));
 
         blockDataTable.Columns.Add("ID", typeof(string));
         blockDataTable.Columns.Add("Name", typeof(string));
@@ -54,18 +54,6 @@ public class FrameDataRecorder : MonoBehaviour
         blockDataTable.Columns.Add("Time Elapsed", typeof(float));
         blockDataTable.Columns.Add("Current Trial Number", typeof(int));
 
-        /*blockDataTable.Columns.Add("Block Running", typeof(bool));*/
-        /* blockDataTable.Columns.Add("Block Completed", typeof(string));*/
-
-
-
-
-
-
-        /*ExperimentationSetup.SaveToCSV(table, fullPath);*/
-        /*    blockIsRunning = false;*/
-        /*mainSequence.blockStartEvent;*/
-        /*blockIsCompleted = false;*/
 
     }
 
@@ -74,20 +62,23 @@ public class FrameDataRecorder : MonoBehaviour
     {
         if (MainSequence.blockIsRunning)
         {
-            Debug.Log('a');
+            timeElapsed += Time.deltaTime;
+            frameCount += 1;
             blockDataTable.Rows.Add(id, initial, age, gender, frameCount, timeElapsed, trialCount);
         }
     }
 
     void startRecording()
     {
+        timeElapsed = 0;
+        frameCount = 0;
         Debug.Log("start recording");
         fileName =id + "_" + initial + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
     }
 
     void finishRecording()
     {
-        folder = @"D:/Guandong/data/" + id + "_" + initial;
+        folder = @"C:/Users/gwan5836/OneDrive - The University of Sydney (Staff)/2023/vr texture integration/raw data/" + id + "_" + initial;
 
         if (!System.IO.Directory.Exists(folder))
         {
