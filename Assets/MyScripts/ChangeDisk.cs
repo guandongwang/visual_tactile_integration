@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class ChangeDisk : MonoBehaviour
 {
@@ -15,8 +16,8 @@ public class ChangeDisk : MonoBehaviour
         mainSequence = GetComponent<MainSequence>();
         dataRecorder = GetComponent<DataRecorder>();
 
-        mainSequence.onTrialStart.AddListener(SwitchDisk);
-        mainSequence.onTrialFinish.AddListener(HideAllDisks);
+/*        mainSequence.onTrialStart.AddListener(SwitchDisk());
+        mainSequence.onTrialFinish.AddListener(HideAllDisks);*/
 
         for (int i = 1; i <= 5; i++)
         {
@@ -35,18 +36,24 @@ public class ChangeDisk : MonoBehaviour
 
     }
 
-    void SwitchDisk()
-    {
-        Debug.Log("Switch Disk: " + dataRecorder.currDiskNo);
-        /*HideAllDisks();*/
-        disks[dataRecorder.currDiskNo].transform.position = new Vector3(0f, 0.05f, 0f);
-    }
-
-    void HideAllDisks()
+    public void SwitchDisk(int diskNo)
     {
         foreach (GameObject disk in disks)
-        { 
+        {
+            dataRecorder.currDiskNo = -1;
             disk.transform.position = new Vector3(0f, 0f, 0f);
         }
+
+        if (diskNo >= 0)
+        { 
+            Debug.Log("Switch Disk: " + diskNo);
+            /*HideAllDisks();*/
+            disks[diskNo].transform.position = new Vector3(0f, 0.05f, 0f);
+        }
     }
+
+  /*  public void HideAllDisks()
+    {
+       
+    }*/
 }

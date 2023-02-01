@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public class DataRecorder : MonoBehaviour
 {
-    public DataTable blockDataTable = new();
+    public DataTable frameDataTable = new();
     public DataTable trialDataTable = new();
 
     public DataRow newRow;
@@ -34,8 +34,8 @@ public class DataRecorder : MonoBehaviour
     
 
     public string folder;
-    public string frameDatafileName;
-    public string trialDatafileName;
+    public string frameDataFileName;
+    public string trialDataFileName;
 
 
     MainSequence mainSequence;
@@ -47,19 +47,18 @@ public class DataRecorder : MonoBehaviour
         mainSequence.onBlockStart.AddListener(startRecording);
         mainSequence.onBlockFinish.AddListener(finishRecording);
 
-        blockDataTable.Columns.Add("ID", typeof(string));
-        blockDataTable.Columns.Add("Name", typeof(string));
-        blockDataTable.Columns.Add("Age", typeof(int));
-        blockDataTable.Columns.Add("Gender", typeof(string));
+        frameDataTable.Columns.Add("ID", typeof(string));
+        frameDataTable.Columns.Add("Name", typeof(string));
+        frameDataTable.Columns.Add("Age", typeof(int));
+        frameDataTable.Columns.Add("Gender", typeof(string));
 
-        blockDataTable.Columns.Add("Frame", typeof(int));
-        blockDataTable.Columns.Add("Time Elapsed", typeof(float));
+        frameDataTable.Columns.Add("Frame", typeof(int));
+        frameDataTable.Columns.Add("Time Elapsed", typeof(float));
 
-        blockDataTable.Columns.Add("Current Trial Number", typeof(int));
-        blockDataTable.Columns.Add("Current Disk Number", typeof(int));
-        blockDataTable.Columns.Add("Current Response", typeof(string));
+        frameDataTable.Columns.Add("Current Trial Number", typeof(int));
+        frameDataTable.Columns.Add("Current Disk Number", typeof(int));
+        frameDataTable.Columns.Add("Current Response", typeof(string));
 
-        
         //Trial Data
         trialDataTable.Columns.Add("ID", typeof(string));
         trialDataTable.Columns.Add("Name", typeof(string));
@@ -70,7 +69,8 @@ public class DataRecorder : MonoBehaviour
         trialDataTable.Columns.Add("Time Elapsed", typeof(float));
 
         trialDataTable.Columns.Add("Current Trial Number", typeof(int));
-        trialDataTable.Columns.Add("Current Disk Number", typeof(int));
+        trialDataTable.Columns.Add("First Stimulus", typeof(int));
+        trialDataTable.Columns.Add("Second Stimulus", typeof(int));
         trialDataTable.Columns.Add("Current Response", typeof(string));
 
 
@@ -83,8 +83,8 @@ public class DataRecorder : MonoBehaviour
         {
             timeElapsed += Time.deltaTime;
             frameCount += 1;
-            
-            blockDataTable.Rows.Add(id, initial, age, gender, frameCount, timeElapsed, currTrialCount, currDiskNo, currResponse);
+
+            frameDataTable.Rows.Add(id, initial, age, gender, frameCount, timeElapsed, currTrialCount, currDiskNo, currResponse);
         
         }
     }
@@ -94,8 +94,8 @@ public class DataRecorder : MonoBehaviour
         timeElapsed = 0;
         frameCount = 0;
         Debug.Log("start recording");
-        frameDatafileName ="frame_" + id + "_" + initial + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
-        trialDatafileName ="trial_" + id + "_" + initial + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
+        frameDataFileName ="frame_" + id + "_" + initial + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
+        trialDataFileName ="trial_" + id + "_" + initial + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
     }
 
     void finishRecording()
@@ -107,9 +107,9 @@ public class DataRecorder : MonoBehaviour
             System.IO.Directory.CreateDirectory(folder);
         }
        
-        SaveToCSV(blockDataTable, folder + '/' + frameDatafileName );
-        SaveToCSV(trialDataTable, folder + '/' + trialDatafileName); ;
-        blockDataTable.Rows.Clear();
+        SaveToCSV(frameDataTable, folder + '/' + frameDataFileName);
+        SaveToCSV(trialDataTable, folder + '/' + trialDataFileName); ;
+        frameDataTable.Rows.Clear();
         trialDataTable.Rows.Clear();
 
 

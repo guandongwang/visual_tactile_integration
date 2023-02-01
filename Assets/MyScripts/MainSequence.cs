@@ -13,15 +13,21 @@ public class MainSequence : MonoBehaviour
     public UnityEvent onTrialFinish;
 
     DataRecorder dataRecorder;
+    StimulusCreation stimulusCreation;
+    ChangeDisk changeDisk;
+
+
     public static bool blockIsRunning;
 
-    public List<int> stimulusSequence;
+    /*public List<int> stimulusSequence;*/
 
     public bool isResponseMade;
     void Start()
     {
 
         dataRecorder = GetComponent<DataRecorder>();
+        stimulusCreation = GetComponent<StimulusCreation>();
+        changeDisk = GetComponent<ChangeDisk>();
 
         if (onBlockStart == null)
         {
@@ -33,7 +39,7 @@ public class MainSequence : MonoBehaviour
             onBlockFinish = new UnityEvent();
         }
 
-        //trial event
+      /*  //trial event
         if (onTrialStart == null)
         {
             onTrialStart = new UnityEvent();
@@ -43,15 +49,15 @@ public class MainSequence : MonoBehaviour
         {
             onTrialFinish = new UnityEvent();
         }
-
+*/
         onBlockStart.AddListener(BeginTestingBlock);
 
         blockIsRunning = false;
 
 
-        stimulusSequence = GenerateStimulusSequence(5, 10);
+      /*  stimulusSequence = GenerateStimulusSequence(5, 10);
         Debug.Log(string.Join(", ", stimulusSequence.ToArray()));
-
+*/
  
     }
 
@@ -65,31 +71,7 @@ public class MainSequence : MonoBehaviour
             
         }
     }
-    public List<int> GenerateStimulusSequence(int numberOfDisks, int numberOfRepetitions)
-    {
-        List<int> sequence = new List<int>();
-        for (int i = 0; i < numberOfDisks; i++)
-        {
-            for (int j = 0; j < numberOfRepetitions; j++)
-            {
-                sequence.Add(i);
-            }
-        }
-        Shuffle(sequence);
-        return sequence;
-    }
 
-
-    void Shuffle(List<int> list)
-    {
-        for (int i = 0; i < list.Count; i++)
-        {
-            int temp = list[i];
-            int randomIndex = Random.Range(i, list.Count);
-            list[i] = list[randomIndex];
-            list[randomIndex] = temp;
-        }
-    }
 
     void BeginTestingBlock()
     {
@@ -107,16 +89,28 @@ public class MainSequence : MonoBehaviour
 
         dataRecorder.currTrialCount = 0;
 
-        foreach (int stim in stimulusSequence)
+        foreach (List<int> stim in stimulusCreation.stimulusPairSequence)
         {
             Debug.Log("Trial: " + dataRecorder.currTrialCount);
-            onTrialStart.Invoke();
+            /*onTrialStart.Invoke();*/
             isResponseMade = false;
 
+            Debug.Log("stim1:, " +  stim[1]);
             dataRecorder.currTrialCount += 1;
-            dataRecorder.currDiskNo = stim;
+            dataRecorder.currDiskNo = stim[0];
+            changeDisk.SwitchDisk(dataRecorder.currDiskNo);
+            yield return new WaitForSeconds(1.5f);
 
             
+            changeDisk.SwitchDisk(-1);
+            yield return new WaitForSeconds(.5f);
+
+            Debug.Log("stim2: " + stim[1]);
+            dataRecorder.currDiskNo = stim[1];
+            changeDisk.SwitchDisk(dataRecorder.currDiskNo);
+            yield return new WaitForSeconds(1.5f);
+            changeDisk.SwitchDisk(-1);
+
             while (!isResponseMade)
             {
 
@@ -128,8 +122,8 @@ public class MainSequence : MonoBehaviour
                     //add trial data when response is made
                     dataRecorder.trialDataTable.Rows.Add(dataRecorder.id, dataRecorder.initial, dataRecorder.age, dataRecorder.gender,
                     dataRecorder.frameCount, dataRecorder.timeElapsed,
-                    dataRecorder.currTrialCount, dataRecorder.currDiskNo, dataRecorder.currResponse);
-                    onTrialFinish.Invoke();
+                    dataRecorder.currTrialCount, stim[0], stim[1], dataRecorder.currResponse);
+                    /*onTrialFinish.Invoke();*/
                 }
 
                 else if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -140,15 +134,14 @@ public class MainSequence : MonoBehaviour
 
                     dataRecorder.trialDataTable.Rows.Add(dataRecorder.id, dataRecorder.initial, dataRecorder.age, dataRecorder.gender,
                     dataRecorder.frameCount, dataRecorder.timeElapsed,
-                    dataRecorder.currTrialCount, dataRecorder.currDiskNo, dataRecorder.currResponse);
-                    onTrialFinish.Invoke();
+                    dataRecorder.currTrialCount, stim[0], stim[1], dataRecorder.currResponse);
+                    /*onTrialFinish.Invoke();*/
                 }
 
-                
-
-
-                yield return null;
+                yield return null; 
             }
+
+            yield return new WaitForSeconds(.5f);
         }
         blockIsRunning = false;
         onBlockFinish.Invoke();
