@@ -16,9 +16,9 @@ public class MainSequence : MonoBehaviour
     StimulusCreation stimulusCreation;
     ChangeDisk changeDisk;
 
-
     public static bool blockIsRunning;
 
+    public int blockCount;
     /*public List<int> stimulusSequence;*/
 
     public bool isResponseMade;
@@ -39,25 +39,12 @@ public class MainSequence : MonoBehaviour
             onBlockFinish = new UnityEvent();
         }
 
-      /*  //trial event
-        if (onTrialStart == null)
-        {
-            onTrialStart = new UnityEvent();
-        }
-
-        if (onTrialFinish == null)
-        {
-            onTrialFinish = new UnityEvent();
-        }
-*/
+      
         onBlockStart.AddListener(BeginTestingBlock);
 
         blockIsRunning = false;
 
-
-      /*  stimulusSequence = GenerateStimulusSequence(5, 10);
-        Debug.Log(string.Join(", ", stimulusSequence.ToArray()));
-*/
+        blockCount = 0;
  
     }
 
@@ -145,6 +132,7 @@ public class MainSequence : MonoBehaviour
         }
         blockIsRunning = false;
         onBlockFinish.Invoke();
+        blockCount++;
         Debug.Log("finish");
     }
 

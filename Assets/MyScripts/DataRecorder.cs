@@ -37,6 +37,7 @@ public class DataRecorder : MonoBehaviour
     public string frameDataFileName;
     public string trialDataFileName;
 
+  
 
     MainSequence mainSequence;
   
@@ -44,8 +45,8 @@ public class DataRecorder : MonoBehaviour
     void Start()
     {
         mainSequence = GetComponent<MainSequence>();
-        mainSequence.onBlockStart.AddListener(startRecording);
-        mainSequence.onBlockFinish.AddListener(finishRecording);
+        mainSequence.onBlockStart.AddListener(StartRecording);
+        mainSequence.onBlockFinish.AddListener(FinishRecording);
 
         frameDataTable.Columns.Add("ID", typeof(string));
         frameDataTable.Columns.Add("Name", typeof(string));
@@ -89,7 +90,7 @@ public class DataRecorder : MonoBehaviour
         }
     }
 
-    void startRecording()
+    void StartRecording()
     {
         timeElapsed = 0;
         frameCount = 0;
@@ -98,7 +99,7 @@ public class DataRecorder : MonoBehaviour
         trialDataFileName ="trial_" + id + "_" + initial + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
     }
 
-    void finishRecording()
+    void FinishRecording()
     {
         folder = @"C:/Users/gwan5836/OneDrive - The University of Sydney (Staff)/2023/vr texture integration/raw data/" + id + "_" + initial;
 

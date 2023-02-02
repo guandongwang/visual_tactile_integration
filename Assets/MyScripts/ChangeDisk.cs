@@ -52,8 +52,4 @@ public class ChangeDisk : MonoBehaviour
         }
     }
 
-  /*  public void HideAllDisks()
-    {
-       
-    }*/
 }
