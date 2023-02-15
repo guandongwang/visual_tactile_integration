@@ -14,7 +14,7 @@ public class MainSequence : MonoBehaviour
 
     DataRecorder dataRecorder;
     StimulusCreation stimulusCreation;
-    ChangeDisk changeDisk;
+    VRDeviceManager vrDeviceManager;
 
     public static bool blockIsRunning;
 
@@ -27,7 +27,7 @@ public class MainSequence : MonoBehaviour
 
         dataRecorder = GetComponent<DataRecorder>();
         stimulusCreation = GetComponent<StimulusCreation>();
-        changeDisk = GetComponent<ChangeDisk>();
+        vrDeviceManager = GetComponent<VRDeviceManager>();
 
         if (onBlockStart == null)
         {
@@ -85,18 +85,18 @@ public class MainSequence : MonoBehaviour
             Debug.Log("stim1:, " +  stim[1]);
             dataRecorder.currTrialCount += 1;
             dataRecorder.currDiskNo = stim[0];
-            changeDisk.SwitchDisk(dataRecorder.currDiskNo);
+            vrDeviceManager.SwitchDisk(dataRecorder.currDiskNo);
             yield return new WaitForSeconds(1.5f);
 
-            
-            changeDisk.SwitchDisk(-1);
+
+            vrDeviceManager.SwitchDisk(-1);
             yield return new WaitForSeconds(.5f);
 
             Debug.Log("stim2: " + stim[1]);
             dataRecorder.currDiskNo = stim[1];
-            changeDisk.SwitchDisk(dataRecorder.currDiskNo);
+            vrDeviceManager.SwitchDisk(dataRecorder.currDiskNo);
             yield return new WaitForSeconds(1.5f);
-            changeDisk.SwitchDisk(-1);
+            vrDeviceManager.SwitchDisk(-1);
 
             while (!isResponseMade)
             {
