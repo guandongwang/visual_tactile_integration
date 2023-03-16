@@ -3,30 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Valve.VR;
+using HTC.UnityPlugin.Vive;
 
-public class VRDeviceManager     : MonoBehaviour
+public class VRDeviceManager : MonoBehaviour
 {
     MainSequence mainSequence;
     DataRecorder dataRecorder;
 
     public List<GameObject> disks;
     public GameObject device;
+    public GameObject tracker;
 
     /*public SteamVR_Input_Sources tracker; */
-   
+
 
     // Start is called before the first frame update
     void Start()
     {
         mainSequence = GetComponent<MainSequence>();
         dataRecorder = GetComponent<DataRecorder>();
+
+        mainSequence.onBlockStart.AddListener(DisableTrackerMovement);
+        mainSequence.onBlockFinish.AddListener(EnableTrackerMovement);
+
         device = GameObject.Find("Device");
-        
+        tracker = device.transform.parent.gameObject;
 
         /*        mainSequence.onTrialStart.AddListener(SwitchDisk());
                 mainSequence.onTrialFinish.AddListener(HideAllDisks);*/
 
-        for (int i = 1; i <= 5; i++)
+        for (int i = 9; i <= 13; i++)
         {
             GameObject obj = GameObject.Find("B" + i);
             if (obj != null)
@@ -35,25 +41,30 @@ public class VRDeviceManager     : MonoBehaviour
             }
         }
 
- 
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-          /*  device.GetComponent<SteamVR_TrackedObject>().enabled = false;*/
-        }
 
-    
+    }
+
+    void DisableTrackerMovement()
+    { 
+        tracker.GetComponent<VivePoseTracker>().enabled = false; 
+    }
+
+    void EnableTrackerMovement()
+    {
+        tracker.GetComponent<VivePoseTracker>().enabled = true;
     }
 
     public void SwitchDisk(int diskNo)
     {
         foreach (GameObject disk in disks)
         {
-            dataRecorder.currDiskNo = -1;
+            /*dataRecorder.currDiskNo = -1;*/
             //-0.045m offset from the centre of the device
             disk.transform.localPosition = new Vector3(0f, -0.045f, 0f);
         }

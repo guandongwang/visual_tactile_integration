@@ -21,6 +21,7 @@ public class DataRecorder : MonoBehaviour
     public string initial;
     public int age;
     public string gender;
+    public string condition;
 
     //timing info
     public int frameCount;
@@ -30,7 +31,7 @@ public class DataRecorder : MonoBehaviour
     //Testing Info
     public int currTrialCount;
     public int currDiskNo;
-    public string currResponse;
+    public int currResponse; //0->left; 1->Right
     
 
     public string folder;
@@ -52,27 +53,41 @@ public class DataRecorder : MonoBehaviour
         frameDataTable.Columns.Add("Name", typeof(string));
         frameDataTable.Columns.Add("Age", typeof(int));
         frameDataTable.Columns.Add("Gender", typeof(string));
+        frameDataTable.Columns.Add("Condition", typeof(string));
 
         frameDataTable.Columns.Add("Frame", typeof(int));
         frameDataTable.Columns.Add("Time Elapsed", typeof(float));
 
         frameDataTable.Columns.Add("Current Trial Number", typeof(int));
-        frameDataTable.Columns.Add("Current Disk Number", typeof(int));
-        frameDataTable.Columns.Add("Current Response", typeof(string));
+        /*frameDataTable.Columns.Add("Current Disk Number", typeof(int));*/
+        frameDataTable.Columns.Add("Current Response", typeof(int));
 
         //Trial Data
         trialDataTable.Columns.Add("ID", typeof(string));
         trialDataTable.Columns.Add("Name", typeof(string));
         trialDataTable.Columns.Add("Age", typeof(int));
         trialDataTable.Columns.Add("Gender", typeof(string));
-
-        trialDataTable.Columns.Add("Frame", typeof(int));
-        trialDataTable.Columns.Add("Time Elapsed", typeof(float));
+        frameDataTable.Columns.Add("Condition", typeof(string));
 
         trialDataTable.Columns.Add("Current Trial Number", typeof(int));
-        trialDataTable.Columns.Add("First Stimulus", typeof(int));
-        trialDataTable.Columns.Add("Second Stimulus", typeof(int));
-        trialDataTable.Columns.Add("Current Response", typeof(string));
+
+        //timing
+        trialDataTable.Columns.Add("Frame", typeof(int));//?
+        trialDataTable.Columns.Add("Trial Start Time", typeof(float));
+        trialDataTable.Columns.Add("Stimulus 1 Onset", typeof(float));
+        trialDataTable.Columns.Add("Stimulus 1 Offset", typeof(float));
+        trialDataTable.Columns.Add("Stimulus 1 Onset", typeof(float));
+        trialDataTable.Columns.Add("Stimulus 1 Offset", typeof(float));
+        trialDataTable.Columns.Add("Response Made", typeof(float));
+        trialDataTable.Columns.Add("Trial Duration", typeof(float));
+
+        //stimulus
+        trialDataTable.Columns.Add("1st Stimulus Vision", typeof(int));
+        trialDataTable.Columns.Add("2nd Stimulus Vision", typeof(int));
+        trialDataTable.Columns.Add("1st Stimulus Touch", typeof(int));
+        trialDataTable.Columns.Add("2nd Stimulus Touch", typeof(int));
+
+        trialDataTable.Columns.Add("Current Response", typeof(int));
 
 
     }
@@ -85,7 +100,8 @@ public class DataRecorder : MonoBehaviour
             timeElapsed += Time.deltaTime;
             frameCount += 1;
 
-            frameDataTable.Rows.Add(id, initial, age, gender, frameCount, timeElapsed, currTrialCount, currDiskNo, currResponse);
+            frameDataTable.Rows.Add(id, initial, age, gender, condition, 
+                                    frameCount, timeElapsed, currTrialCount, currDiskNo, currResponse);
         
         }
     }
@@ -95,8 +111,8 @@ public class DataRecorder : MonoBehaviour
         timeElapsed = 0;
         frameCount = 0;
         Debug.Log("start recording");
-        frameDataFileName ="frame_" + id + "_" + initial + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
-        trialDataFileName ="trial_" + id + "_" + initial + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
+        frameDataFileName ="frame_" + id + "_" + initial + "_" + condition + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
+        trialDataFileName ="trial_" + id + "_" + initial + "_" + condition + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
     }
 
     void FinishRecording()

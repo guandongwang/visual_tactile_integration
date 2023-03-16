@@ -7,12 +7,13 @@ public class StimulusCreation : MonoBehaviour
     public int numberOfDisks;
     public int numberOfRepetitions;
     public List<List<int>> stimulusPairSequence;
+    public string condition;
 
     // Start is called before the first frame update
     void Start()
     {
         numberOfDisks = 5;
-        numberOfRepetitions = 1;
+        numberOfRepetitions = 10;
         stimulusPairSequence =  GenerateStimulusSequence(numberOfDisks, numberOfRepetitions);
     }
 
@@ -61,4 +62,6 @@ public class StimulusCreation : MonoBehaviour
         }
         return list;
     }
+
+
 }

@@ -15,6 +15,7 @@ public class MainSequence : MonoBehaviour
     DataRecorder dataRecorder;
     StimulusCreation stimulusCreation;
     VRDeviceManager vrDeviceManager;
+    PhysicalDeviceManager physicalDeviceManager;
 
     public static bool blockIsRunning;
 
@@ -22,12 +23,20 @@ public class MainSequence : MonoBehaviour
     /*public List<int> stimulusSequence;*/
 
     public bool isResponseMade;
+
+
+    public string[] diskName;
+
+
     void Start()
     {
+
+        diskName = new string[] { "a", "b", "c", "d", "e" };
 
         dataRecorder = GetComponent<DataRecorder>();
         stimulusCreation = GetComponent<StimulusCreation>();
         vrDeviceManager = GetComponent<VRDeviceManager>();
+        physicalDeviceManager = GetComponent<PhysicalDeviceManager>();
 
         if (onBlockStart == null)
         {
@@ -45,17 +54,22 @@ public class MainSequence : MonoBehaviour
         blockIsRunning = false;
 
         blockCount = 0;
- 
+
+      
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && onBlockStart != null && !blockIsRunning)
+        if (Input.GetKeyDown(KeyCode.Space) && onBlockStart != null && !blockIsRunning && physicalDeviceManager.isTouchWheelReady)
         {
             blockIsRunning = true;
             onBlockStart.Invoke();
-            
+
+         /*   physicalDeviceManager.SwitchPhysicalDisk(4);
+            physicalDeviceManager.touchWheel.BaseStream.Flush();*/
+
         }
     }
 
@@ -85,18 +99,46 @@ public class MainSequence : MonoBehaviour
             Debug.Log("stim1:, " +  stim[1]);
             dataRecorder.currTrialCount += 1;
             dataRecorder.currDiskNo = stim[0];
+
+    
+            physicalDeviceManager.WriteSerialData(diskName[dataRecorder.currDiskNo]);
+            while (!physicalDeviceManager.isTouchWheelReady)
+            { yield return null; }
+            physicalDeviceManager.WriteSerialData("p");
+            while (!physicalDeviceManager.isTouchWheelReady)
+            { yield return null; }
             vrDeviceManager.SwitchDisk(dataRecorder.currDiskNo);
             yield return new WaitForSeconds(1.5f);
 
 
+
+           
+            physicalDeviceManager.WriteSerialData("n");
+            while (!physicalDeviceManager.isTouchWheelReady)
+            { yield return null; }
             vrDeviceManager.SwitchDisk(-1);
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(1f);
 
             Debug.Log("stim2: " + stim[1]);
             dataRecorder.currDiskNo = stim[1];
+
+            
+            physicalDeviceManager.WriteSerialData(diskName[dataRecorder.currDiskNo]);
+            while (!physicalDeviceManager.isTouchWheelReady)
+            { yield return null; }
+            physicalDeviceManager.WriteSerialData("p");
+            while (!physicalDeviceManager.isTouchWheelReady)
+            { yield return null; }
             vrDeviceManager.SwitchDisk(dataRecorder.currDiskNo);
             yield return new WaitForSeconds(1.5f);
+
+
+            physicalDeviceManager.WriteSerialData("n");
+            while (!physicalDeviceManager.isTouchWheelReady)
+            { yield return null; }
             vrDeviceManager.SwitchDisk(-1);
+
+
 
             while (!isResponseMade)
             {
@@ -105,7 +147,7 @@ public class MainSequence : MonoBehaviour
                 {
                     Debug.Log("response Made");
                     isResponseMade = true;
-                    dataRecorder.currResponse = "Left";
+                    dataRecorder.currResponse = 0;
                     //add trial data when response is made
                     dataRecorder.trialDataTable.Rows.Add(dataRecorder.id, dataRecorder.initial, dataRecorder.age, dataRecorder.gender,
                     dataRecorder.frameCount, dataRecorder.timeElapsed,
@@ -117,7 +159,7 @@ public class MainSequence : MonoBehaviour
                 {
                     Debug.Log("response Made");
                     isResponseMade = true;
-                    dataRecorder.currResponse = "Right";
+                    dataRecorder.currResponse = 1;
 
                     dataRecorder.trialDataTable.Rows.Add(dataRecorder.id, dataRecorder.initial, dataRecorder.age, dataRecorder.gender,
                     dataRecorder.frameCount, dataRecorder.timeElapsed,

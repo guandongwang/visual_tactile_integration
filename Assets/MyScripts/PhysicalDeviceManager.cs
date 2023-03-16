@@ -4,50 +4,92 @@ using UnityEngine;
 using System.IO;
 using System.IO.Ports;
 using Valve.VR;
+using System.Threading;
 
 
-public class DeviceManager : MonoBehaviour
+public class PhysicalDeviceManager : MonoBehaviour
 {
-    public SteamVR_Action_Pose tracker;
-    public GameObject device;
-    SerialPort touchwheel = new SerialPort("COM3", 9600);
+    private SerialPort serialPort;
+    private Thread readThread;
+    private bool running = true;
+
     public string touchWheelMessage;
     public bool isTouchWheelReady;
+
+    public GameObject device;
+    public GameObject tracker;
+
+    
+
     // Start is called before the first frame update
     void Start()
     {
-        device.transform.position = tracker.localPosition;
+        
 
-        if (!isTouchWheelReady)
-        {
-            StartCoroutine(CheckTouchWheelStatus());
-        }
+        device = GameObject.Find("Device");
+        tracker = device.transform.parent.gameObject;
+
 
         isTouchWheelReady = false;
 
+
+
+        serialPort = new SerialPort("COM3", 9600);
+        serialPort.Open();
+
+        readThread = new Thread(new ThreadStart(ReadSerialData));
+        readThread.Start();
+
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        device.transform.position = tracker.localPosition;
+
     }
 
-    IEnumerator CheckTouchWheelStatus()
+    void ReadSerialData()
     {
-        // update seiral message 
-        while (!isTouchWheelReady)
+        while (running)
         {
-            touchWheelMessage = touchwheel.ReadLine();
-            isTouchWheelReady = touchWheelMessage.Equals("ready");
-
-            yield return null;
-
+            try
+            {
+                string data = serialPort.ReadLine();
+                isTouchWheelReady = data.Equals("ready");
+               /* Debug.Log("Received: " + data);*/
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log(e.Message);
+            }
         }
-
-        Debug.Log("Touchwheel Ready");
-        yield break;
     }
 
-  
+    public void WriteSerialData(string data)
+    {
+        try
+        {
+            serialPort.Write(data);
+            serialPort.BaseStream.Flush();
+            Debug.Log("Sent: " + data);
+            isTouchWheelReady = false;
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        running = false;
+        readThread.Abort();
+        serialPort.Close();
+    }
+    
 }
+
+
+    
+
+
