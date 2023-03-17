@@ -12,7 +12,7 @@ public class StimulusGeneration : MonoBehaviour
     public TrialDataEntry[] trialData;
     public TrialDataEntry testDataEntry = new TrialDataEntry();
 
-    public int numberOfStimulusPair;
+    /*public int numberOfStimulusPair;*/
     public int numberOfRepetitions;
 
 
@@ -24,15 +24,29 @@ public class StimulusGeneration : MonoBehaviour
     public string condition;
 
 
+    public Dictionary<string, string> tactileDisksDic;
+
+    public List<string> tactileDisks;
+
     // Start is called before the first frame update
     void Start()
     {
-        numberOfStimulusPair = 5;
+        /*numberOfStimulusPair = 5;*/
         numberOfRepetitions = 10;
 
-        trialData = new TrialDataEntry[numberOfStimulusPair * numberOfRepetitions];
+        tactileDisks = new List<string>() { "B7", "B9", "B11", "B13", "B15" };
 
-        int index = 0;
+        tactileDisksDic = new Dictionary<string, string>(5);
+        tactileDisksDic.Add(tactileDisks[0], "A");
+        tactileDisksDic.Add(tactileDisks[1], "B");
+        tactileDisksDic.Add(tactileDisks[2], "C");
+        tactileDisksDic.Add(tactileDisks[3], "D");
+        tactileDisksDic.Add(tactileDisks[4], "E");
+
+
+       /* trialData = new TrialDataEntry[tactileDisks.Count * numberOfRepetitions];*/
+
+/*        int index = 0;
 
         foreach (TrialDataEntry trialDataEntry in trialData)
         {
@@ -44,27 +58,41 @@ public class StimulusGeneration : MonoBehaviour
 
             trialDataEntry.CurrentTrialNumber = index;
             index++;
-        }
+        }*/
 
-        switch (condition)
+
+        Debug.Log("x");
+        //create stimuli
+
+        List<string> stimuli = RepeatList(tactileDisks, numberOfRepetitions);
+        for (int i = 0; i < stimuli.Count; id++)
         {
-            case "Vision":
-                
-                break;
-
-            case "Touch":
-               
-                break;
-
-            case "T = V":
-
-                break;
-
-            case "T = V + 1":
-
-                break;
-
+            Debug.Log("x");
         }
+       /* switch *//*(condition)
+                {
+          *//*          case "V":
+
+
+
+                    case "T":
+        *//*
+
+
+                    case "VTEqual":*/
+
+
+
+
+        /*         case "V<T": // in terms of disk number
+
+
+
+                 case "V>T":*/
+
+
+
+        /*  }*/
 
 
 
@@ -95,11 +123,11 @@ public class StimulusGeneration : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+/*        if (Input.GetKeyDown(KeyCode.Q))
         {
             Debug.Log(testDataEntry.ToString());
             Debug.Log(testDataEntry.GetHeader());
-        }
+        }*/
     }
 
     public class TrialDataEntry
