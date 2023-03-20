@@ -67,7 +67,7 @@ public class DataRecorder : MonoBehaviour
         trialDataTable.Columns.Add("Name", typeof(string));
         trialDataTable.Columns.Add("Age", typeof(int));
         trialDataTable.Columns.Add("Gender", typeof(string));
-        frameDataTable.Columns.Add("Condition", typeof(string));
+        /*frameDataTable.Columns.Add("Condition", typeof(string));*/
 
         trialDataTable.Columns.Add("Current Trial Number", typeof(int));
 
