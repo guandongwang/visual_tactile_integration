@@ -14,7 +14,7 @@ public class TrialDataEntry
     public class SessionInfo
     {
         public int ID { get; set; }
-        public string Name { get; set; }
+        public string Initial { get; set; }    
         public int Age { get; set; }
         public string Gender { get; set; }
         public string Condition { get; set; }
@@ -46,75 +46,46 @@ public class TrialDataEntry
 
 
     //constructer declaration
-    public TrialDataEntry(int ID, String Name, int Age, string Gender, string Condition) 
+    public TrialDataEntry(int ID, String Initial, int Age, string Gender, string Condition) 
                 
     {
         SessionInfoData = new SessionInfo();
-            
+        TrialInfoData = new TrialInfo();
+
         SessionInfoData.ID = ID;
-        SessionInfoData.Name = Name;
+        SessionInfoData.Initial = Initial;
         SessionInfoData.Age = Age;
         SessionInfoData.Gender = Gender;
         SessionInfoData.Condition = Condition;
 
     }
 
-    public override string ToString()
+    public string GetValues()
     {
         string sessionInfoValues = string.Join(", ", typeof(SessionInfo).GetProperties().Select(p => p.GetValue(SessionInfoData)));
         string trialInfoValues = string.Join(", ", typeof(TrialInfo).GetProperties().Select(p => p.GetValue(TrialInfoData)));
+
+        /*        PropertyInfo[] sessionInfoProperties = SessionInfoData.GetType().GetProperties();
+                string sessionInfoValues = string.Join(",", sessionInfoProperties.Select(p => p.GetValue(SessionInfoData)).Where(v => v != null));
+
+                PropertyInfo[] trialInfoProperties = TrialInfoData.GetType().GetProperties();
+                string trialInfoValues = string.Join(",", trialInfoProperties.Select(p => p.GetValue(TrialInfoData)).Where(v => v != null));*/
+
         return $"{sessionInfoValues}, {trialInfoValues}";
     }
 
     public string GetHeaders()
     {
-        string sessionInfoProperties = string.Join(", ", typeof(SessionInfo).GetProperties().Select(p => p.Name));
-        string trialInfoProperties = string.Join(", ", typeof(TrialInfo).GetProperties().Select(p => p.Name));
-        return $"{sessionInfoProperties}, {trialInfoProperties}";
+
+  
+
+        string sessionInfoHeader = string.Join(", ", typeof(SessionInfo).GetProperties().Select(p => p.Name));
+        string trialInfoHeader = string.Join(", ", typeof(TrialInfo).GetProperties().Select(p => p.Name));
+        return $"{sessionInfoHeader}, {trialInfoHeader}";
     }
 
 
-    /*    public override string ToString()
-        {
-            string dataString = string.Empty;
-            PropertyInfo[] properties = typeof(DataEntry).GetProperties();
-            foreach (PropertyInfo property in properties)
-            {
-                var value = property.GetValue(this); // you should add a null check here before doing value.ToString as it will break on null
-                dataString += value.ToString() + ",";
-            }
-            return dataString;
-        }
-    */
-    /*public override string ToString()
-    {
-        var properties = GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                                   .Where(p => p.CanRead && p.GetIndexParameters().Length == 0)
-                                   .Where(p => p.PropertyType == typeof(string));
+ 
 
-        var nonEmptyProperties = properties.Where(p => !string.IsNullOrEmpty((string)p.GetValue(this)));
-
-
-        return string.Join(",", nonEmptyProperties.Select(p => p.GetValue(this)));
-            
- *//*       return String.Join(",",
-                            this.ID, this.Name, this.Age, this.Gender, this.Condition,
-                            this.CurrentTrialNumber, this.CurrentResponse, this.IsTestingStimulusHigherFreq,
-                            this.TrialStartTime, this.S1Onset, this.S1Offset, this.S2Onset, this.S2Offset, this.ResponseMade,
-                            this.TrialDuration, this.ResponseTime,
-                            this.testingStimPosition, this.S1Vision, this.S1Touch, this.S2Vision, this.S2Touch
-                            );*//*
-    }*/
-    /*    public string GetHeader()
-        {
-            var properties = this.GetType().GetProperties();
-            string header = "";
-            foreach (var property in properties)
-            { header += "," + property.Name; }
-
-            header = header.Remove(0, 1);
-            return header;
-        }
-    */
-
+      
 }

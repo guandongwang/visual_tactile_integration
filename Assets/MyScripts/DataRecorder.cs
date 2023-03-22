@@ -29,9 +29,8 @@ public class DataRecorder : MonoBehaviour
            
         for (int i = 0; i< 50; i++)
         {
-            TrialDataEntry trialDataEntry = new TrialDataEntry(id,name,age,gender,condition);
+            TrialDataEntry trialDataEntry = new TrialDataEntry(id, initial, age,gender,condition);
             trialData.Add(trialDataEntry);
-            Debug.Log(trialDataEntry.ToString());
         }
         
     }

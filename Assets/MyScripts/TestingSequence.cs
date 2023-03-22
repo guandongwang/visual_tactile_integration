@@ -15,10 +15,12 @@ public class TestingSequence : MonoBehaviour
     public UnityEvent onTrialStart;
     public UnityEvent onTrialFinish;
 
+    DataRecorder dataRecorder;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        dataRecorder = GetComponent<DataRecorder>();
 
         if (onBlockStart == null)
         {
@@ -38,19 +40,29 @@ public class TestingSequence : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && onBlockStart != null)
         {
-  
             onBlockStart.Invoke();
+            StartCoroutine(ExperimentBlock());
+        }
+
+    }
+
+
+    IEnumerator ExperimentBlock()
+    {
+        Debug.Log("Block " + BlockCount + " Start");
+
+        int TrialCount = 1;
+
+        foreach (TrialDataEntry entry in dataRecorder.trialData)
+        {
+            Debug.Log("Trial " + TrialCount + " Start");
+            entry.TrialInfoData.CurrentTrialNumber = TrialCount;
+            TrialCount++;
+            yield return new WaitForSeconds(.1f);
+            Debug.Log(entry.GetValues());
 
         }
 
-     /*   IEnumerator ExperimentBlock()
-        {
-            Debug.Log("Block " + BlockCount + " Start");
-
-            trialData = stimulusGeneration.TrialDataFileSetup();
-
-            
-                }*/
 
     }
 
