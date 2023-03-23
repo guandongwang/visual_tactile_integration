@@ -9,6 +9,8 @@ public class TestingSequence : MonoBehaviour
     public int BlockCount;
     public int TrialCount;
 
+    public UnityEvent onPrepStart;
+
     public UnityEvent onBlockStart;
     public UnityEvent onBlockFinish;
 
@@ -16,11 +18,19 @@ public class TestingSequence : MonoBehaviour
     public UnityEvent onTrialFinish;
 
     DataRecorder dataRecorder;
+    StimulusGeneration stimulusGeneration;
+    public bool IsResponseMade;
 
     // Start is called before the first frame update
     void Start()
     {
         dataRecorder = GetComponent<DataRecorder>();
+        stimulusGeneration = GetComponent<StimulusGeneration>();
+
+        if (onPrepStart == null)
+        {
+            onPrepStart = new UnityEvent();
+        }
 
         if (onBlockStart == null)
         {
@@ -40,23 +50,27 @@ public class TestingSequence : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && onBlockStart != null)
         {
-            onBlockStart.Invoke();
-            StartCoroutine(ExperimentBlock());
+            onPrepStart.Invoke();
+            /*StartCoroutine(ExperimentBlock());*/
         }
 
     }
 
 
-    IEnumerator ExperimentBlock()
+/*    IEnumerator ExperimentBlock()
     {
         Debug.Log("Block " + BlockCount + " Start");
 
-        int TrialCount = 1;
+        int TrialCount = 0;
 
         foreach (TrialDataEntry entry in dataRecorder.trialData)
         {
+            
             Debug.Log("Trial " + TrialCount + " Start");
-            entry.TrialInfoData.CurrentTrialNumber = TrialCount;
+            
+            Debug.Log("Stimulus 1 Touch: " + entry.S1Touch);
+
+
             TrialCount++;
             yield return new WaitForSeconds(.1f);
             Debug.Log(entry.GetValues());
@@ -64,6 +78,6 @@ public class TestingSequence : MonoBehaviour
         }
 
 
-    }
+    }*/
 
 }
