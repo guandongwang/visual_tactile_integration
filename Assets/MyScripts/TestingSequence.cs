@@ -42,6 +42,8 @@ public class TestingSequence : MonoBehaviour
             onBlockFinish = new UnityEvent();
         }
 
+        onBlockStart.AddListener(StartBlock);
+
     }
 
     // Update is called once per frame
@@ -51,13 +53,17 @@ public class TestingSequence : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && onBlockStart != null)
         {
             onPrepStart.Invoke();
-            /*StartCoroutine(ExperimentBlock());*/
+            
         }
 
     }
 
+    void StartBlock()
+    { 
+        StartCoroutine(ExperimentBlock()); 
+    }
 
-/*    IEnumerator ExperimentBlock()
+    IEnumerator ExperimentBlock()
     {
         Debug.Log("Block " + BlockCount + " Start");
 
@@ -65,9 +71,9 @@ public class TestingSequence : MonoBehaviour
 
         foreach (TrialDataEntry entry in dataRecorder.trialData)
         {
-            
+
             Debug.Log("Trial " + TrialCount + " Start");
-            
+
             Debug.Log("Stimulus 1 Touch: " + entry.S1Touch);
 
 
@@ -78,6 +84,6 @@ public class TestingSequence : MonoBehaviour
         }
 
 
-    }*/
+    }
 
 }

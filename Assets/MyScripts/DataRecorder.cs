@@ -30,7 +30,7 @@ public class DataRecorder : MonoBehaviour
     void CreateDataFile()
     {
         trialData = new List<TrialDataEntry>();
-       
+        
         for (int i = 0; i< 50; i++)
         {
             TrialDataEntry trialDataEntry = new TrialDataEntry(ID, Initial, Age, Gender, Condition);

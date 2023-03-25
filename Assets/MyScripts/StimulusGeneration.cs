@@ -33,8 +33,9 @@ public class StimulusGeneration : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        dataRecorder = GetComponent<DataRecorder>();
 
-        numberOfRepetitions = 10;
+           numberOfRepetitions = 10;
 
         tactileDisks = new List<string>() { "B7", "B9", "B11", "B13", "B15" };
 
