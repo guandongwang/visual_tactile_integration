@@ -22,44 +22,35 @@ public class DataRecorder : MonoBehaviour
         testingSequence = GetComponent<TestingSequence>();
         stimulusGeneration = GetComponent<StimulusGeneration>();
 
-        testingSequence.onPrepStart.AddListener(CreateDataFile);
+        testingSequence.onStimulusCreated.AddListener(CreateDataFile);
        /* testingSequence.onBlockStart.AddListener(StartDataRecording);*/
-        testingSequence.onBlockFinish.AddListener(FinishDataRecording);
+      /*  testingSequence.onBlockFinish.AddListener(FinishDataRecording);*/
     }
 
     void CreateDataFile()
     {
         trialData = new List<TrialDataEntry>();
-        
-        for (int i = 0; i< 50; i++)
+
+        int _index = 0;
+        foreach(int stimPairIndex in stimulusGeneration.blockStimPair)
         {
             TrialDataEntry trialDataEntry = new TrialDataEntry(ID, Initial, Age, Gender, Condition);
             
 
-            trialDataEntry.CurrentTrialNumber = i;
-            trialDataEntry.TestingStimPosition = stimulusGeneration.BlockTestingStimPosition[i];
+            trialDataEntry.CurrentTrialNumber = _index;
+            trialDataEntry.StimPairIndex = stimPairIndex;
 
+            trialDataEntry.S1Touch = stimulusGeneration.tactileStimPair[_index][0];
+            trialDataEntry.S1Vision = stimulusGeneration.visualStimPair[_index][0];
+            trialDataEntry.S2Touch = stimulusGeneration.tactileStimPair[_index][1];
+            trialDataEntry.S2Vision = stimulusGeneration.visualStimPair[_index][1];
 
-/*            if (trialDataEntry.TestingStimPosition == 1)
-            {
-                trialDataEntry.S1Touch = stimulusGeneration.BlockTactileStim[i];
-                trialDataEntry.S1Vision = stimulusGeneration.BlockVisualStim[i];
-                trialDataEntry.S2Touch = stimulusGeneration.TactileReferenceStim;
-                trialDataEntry.S2Vision = stimulusGeneration.VisualReferenceStim;
-            }
-            else if (trialDataEntry.TestingStimPosition == 2)
-            {
-                trialDataEntry.S1Touch = stimulusGeneration.TactileReferenceStim;
-                trialDataEntry.S1Vision = stimulusGeneration.VisualReferenceStim;
-                trialDataEntry.S2Touch = stimulusGeneration.BlockTactileStim[i];
-                trialDataEntry.S2Vision = stimulusGeneration.BlockVisualStim[i];
-            }
-*/
             trialData.Add(trialDataEntry);
             Debug.Log(trialDataEntry.GetValues());
+            _index++;
         }
-        testingSequence.onBlockStart.Invoke();
 
+        testingSequence.onBlockStart.Invoke();
     }
 
     void FinishDataRecording()

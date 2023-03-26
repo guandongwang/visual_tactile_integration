@@ -9,7 +9,8 @@ public class TestingSequence : MonoBehaviour
     public int BlockCount;
     public int TrialCount;
 
-    public UnityEvent onPrepStart;
+    public UnityEvent onInputFinish;
+    public UnityEvent onStimulusCreated;
 
     public UnityEvent onBlockStart;
     public UnityEvent onBlockFinish;
@@ -27,9 +28,14 @@ public class TestingSequence : MonoBehaviour
         dataRecorder = GetComponent<DataRecorder>();
         stimulusGeneration = GetComponent<StimulusGeneration>();
 
-        if (onPrepStart == null)
+        if (onInputFinish == null)
         {
-            onPrepStart = new UnityEvent();
+            onInputFinish = new UnityEvent();
+        }
+
+        if (onStimulusCreated == null)
+        {
+            onStimulusCreated = new UnityEvent();
         }
 
         if (onBlockStart == null)
@@ -52,7 +58,7 @@ public class TestingSequence : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && onBlockStart != null)
         {
-            onPrepStart.Invoke();
+            onInputFinish.Invoke();
             
         }
 

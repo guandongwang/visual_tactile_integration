@@ -16,7 +16,8 @@ public class TrialDataEntry
 
   
     public int CurrentTrialNumber { get; set; }
-    public int TestingStimPosition { get; set; }
+    public int StimPairIndex { get; set; }
+    /*public int TestingStimPosition { get; set; }*/
     public string S1Vision { get; set; }
     public string S1Touch { get; set; }
     public string S2Vision { get; set; }

@@ -10,34 +10,37 @@ using System.Linq;
 
 public class StimulusGeneration : MonoBehaviour
 {
-
+    TestingSequence testingSequence;
     DataRecorder dataRecorder;
 
     public int numberOfRepetitions;
 
-    public string TactileReferenceStim;
-    public string VisualReferenceStim;
+    public string tactileReferenceStim;
+    public string visualReferenceStim;
 
-    public List<int> BlockTactileStim;
-    public List<int> BlockVisualStim;
-    public List<int> BlockTestingStimPosition;
+    public List<int> blockTactileStim;
+    public List<int> blockVisualStim;
+   /* public List<int> BlockTestingStimPosition;*/
 
-
+   
     public Dictionary<string, string> tactileDisksDic;
 
+
     public List<string> tactileDisks;
+    public List<string> visualDisks;
 
-    public List<List<string>> CounterBalancedStim;
-
-
+    public List<List<string>> tactileStimPair;
+    public List<List<string>> visualStimPair;
+    public List<int> blockStimPair;
 
 
     // Start is called before the first frame update
     void Start()
     {
         dataRecorder = GetComponent<DataRecorder>();
+        testingSequence = GetComponent<TestingSequence>();
 
-           numberOfRepetitions = 10;
+        numberOfRepetitions = 10;
 
         tactileDisks = new List<string>() { "B7", "B9", "B11", "B13", "B15" };
 
@@ -48,58 +51,7 @@ public class StimulusGeneration : MonoBehaviour
         tactileDisksDic.Add(tactileDisks[3], "D");
         tactileDisksDic.Add(tactileDisks[4], "E");
 
-
-        //create a dictionary that contains the counterbalanced stimlus pairs, and use index 1-10 as index
-        CounterBalancedStim =new List<List<string>>(10);
-        CounterBalancedStim.Add(new List<string> { tactileDisks[0], tactileDisks[2]});
-        CounterBalancedStim.Add(new List<string> { tactileDisks[1], tactileDisks[2]});
-        CounterBalancedStim.Add(new List<string> { tactileDisks[2], tactileDisks[2]});
-        CounterBalancedStim.Add(new List<string> { tactileDisks[3], tactileDisks[2]});
-        CounterBalancedStim.Add(new List<string> { tactileDisks[4], tactileDisks[2]});
-        CounterBalancedStim.Add(new List<string> { tactileDisks[2], tactileDisks[0]});
-        CounterBalancedStim.Add(new List<string> { tactileDisks[2], tactileDisks[1]});
-        CounterBalancedStim.Add(new List<string> { tactileDisks[2], tactileDisks[2]});
-        CounterBalancedStim.Add(new List<string> { tactileDisks[2], tactileDisks[3]});
-        CounterBalancedStim.Add(new List<string> { tactileDisks[2], tactileDisks[4]});
-
-/*        foreach (var item in CounterBalancedStimDic)
-        {
-            Debug.Log("Key " + item.Key + " Value " + item.Value[0].ToString());
-        }
-*/
-        switch (dataRecorder.Condition)
-        {
-            case "V":
-
-                break;
-
-            case "T":
-
-                break;
-
-            case "VTEqual":
-
-                /*  TactileReferenceStim = "B11";
-                  VisualReferenceStim = "B11";*/
-              
-
-                BlockTactileStim = ShuffleList(RepeatList(Enumerable.Range(0,CounterBalancedStim.Count).ToList(), numberOfRepetitions));
-                BlockVisualStim = BlockTactileStim;
-
-                foreach (int i in BlockTactileStim)
-                { Debug.Log(" stim: " + string.Join(",", CounterBalancedStim[i].ToArray())); }
-                break;
-
-            case "V<T": // in terms of disk number
-                break;
-
-
-            case "V>T":
-
-                break;
-
-        }
-
+        testingSequence.onInputFinish.AddListener(CreateStimulus);
     }
 
 
@@ -110,17 +62,82 @@ public class StimulusGeneration : MonoBehaviour
 
     }
 
-    public void StartDataRecording() 
+    void CreateStimulus() 
     {
-  
 
- 
+        switch (dataRecorder.Condition)
+        {
+            case "V":
+                visualDisks = tactileDisks;
+                tactileStimPair = DummyStimPair();
+                visualStimPair = CreateCounterbalancedStimPair(visualDisks);
+                break;
+
+            case "T":
+                tactileStimPair = CreateCounterbalancedStimPair(tactileDisks);
+                visualStimPair = DummyStimPair();
+                break;
+
+            case "V=T":
+                visualDisks = tactileDisks;
+                tactileStimPair = CreateCounterbalancedStimPair(tactileDisks);
+                visualStimPair = CreateCounterbalancedStimPair(visualDisks);
+                break;
+
+            case "V<T": // in terms of disk number
+                visualDisks = new List<string>() { "B6", "B8", "B10", "B12", "B14" };
+                tactileStimPair = CreateCounterbalancedStimPair(tactileDisks);
+                visualStimPair = CreateCounterbalancedStimPair(visualDisks);
+                break;
+
+            case "V>T":
+                visualDisks = new List<string>() { "B8", "B10", "B12", "B14", "B16" };
+                tactileStimPair = CreateCounterbalancedStimPair(tactileDisks);
+                visualStimPair = CreateCounterbalancedStimPair(visualDisks);
+                break;
+        }
+
+        blockStimPair = ShuffleList(RepeatList(Enumerable.Range(0, 10).ToList(), numberOfRepetitions));
+        Debug.Log("Stimulus Created");
+        foreach(int i in blockStimPair)
+        { Debug.Log(i); }
+        
+        
+        testingSequence.onStimulusCreated.Invoke();
     }
-  
+
+    List<List<string>> DummyStimPair()
+    {
+
+        //couterbalanced stimulus for touch
+        List<List<string>> stimPair = new List<List<string>>(10);
+        for (int i = 0; i < 10; i++)
+        { stimPair.Add(new List<string> { "dummy", "dummy" }); }
+    
+        return stimPair;
+    }
+
+    List<List<string>> CreateCounterbalancedStimPair(List<string> diskList)
+    {
+      
+        //couterbalanced stimulus for touch
+        List<List<string>> stimPair = new List<List<string>>(10);
+        stimPair.Add(new List<string> { diskList[0], diskList[2] });
+        stimPair.Add(new List<string> { diskList[1], diskList[2] });
+        stimPair.Add(new List<string> { diskList[2], diskList[2] });
+        stimPair.Add(new List<string> { diskList[3], diskList[2] });
+        stimPair.Add(new List<string> { diskList[4], diskList[2] });
+        stimPair.Add(new List<string> { diskList[2], diskList[0] });
+        stimPair.Add(new List<string> { diskList[2], diskList[1] });
+        stimPair.Add(new List<string> { diskList[2], diskList[2] });
+        stimPair.Add(new List<string> { diskList[2], diskList[3] });
+        stimPair.Add(new List<string> { diskList[2], diskList[4] });
+
+        return stimPair;
+    }
 
 
-
-    public static List<T> RepeatList<T>(List<T> originalList, int repeatCount)
+    List<T> RepeatList<T>(List<T> originalList, int repeatCount)
     {
         List<T> repeatedList = new List<T>();
 
@@ -134,7 +151,7 @@ public class StimulusGeneration : MonoBehaviour
 
 
 
-    public static List<T> ShuffleList<T>(List<T> listToShuffle)
+    List<T> ShuffleList<T>(List<T> listToShuffle)
     {
         Random rng = new Random();
         for (int i = listToShuffle.Count - 1; i > 0; i--)
