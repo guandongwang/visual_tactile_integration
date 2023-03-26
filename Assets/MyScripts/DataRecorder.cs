@@ -40,7 +40,7 @@ public class DataRecorder : MonoBehaviour
             trialDataEntry.TestingStimPosition = stimulusGeneration.BlockTestingStimPosition[i];
 
 
-            if (trialDataEntry.TestingStimPosition == 1)
+/*            if (trialDataEntry.TestingStimPosition == 1)
             {
                 trialDataEntry.S1Touch = stimulusGeneration.BlockTactileStim[i];
                 trialDataEntry.S1Vision = stimulusGeneration.BlockVisualStim[i];
@@ -54,7 +54,7 @@ public class DataRecorder : MonoBehaviour
                 trialDataEntry.S2Touch = stimulusGeneration.BlockTactileStim[i];
                 trialDataEntry.S2Vision = stimulusGeneration.BlockVisualStim[i];
             }
-
+*/
             trialData.Add(trialDataEntry);
             Debug.Log(trialDataEntry.GetValues());
         }

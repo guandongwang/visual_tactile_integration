@@ -18,8 +18,8 @@ public class StimulusGeneration : MonoBehaviour
     public string TactileReferenceStim;
     public string VisualReferenceStim;
 
-    public List<string> BlockTactileStim;
-    public List<string> BlockVisualStim;
+    public List<int> BlockTactileStim;
+    public List<int> BlockVisualStim;
     public List<int> BlockTestingStimPosition;
 
 
@@ -27,7 +27,9 @@ public class StimulusGeneration : MonoBehaviour
 
     public List<string> tactileDisks;
 
-   
+    public List<List<string>> CounterBalancedStim;
+
+
 
 
     // Start is called before the first frame update
@@ -46,6 +48,25 @@ public class StimulusGeneration : MonoBehaviour
         tactileDisksDic.Add(tactileDisks[3], "D");
         tactileDisksDic.Add(tactileDisks[4], "E");
 
+
+        //create a dictionary that contains the counterbalanced stimlus pairs, and use index 1-10 as index
+        CounterBalancedStim =new List<List<string>>(10);
+        CounterBalancedStim.Add(new List<string> { tactileDisks[0], tactileDisks[2]});
+        CounterBalancedStim.Add(new List<string> { tactileDisks[1], tactileDisks[2]});
+        CounterBalancedStim.Add(new List<string> { tactileDisks[2], tactileDisks[2]});
+        CounterBalancedStim.Add(new List<string> { tactileDisks[3], tactileDisks[2]});
+        CounterBalancedStim.Add(new List<string> { tactileDisks[4], tactileDisks[2]});
+        CounterBalancedStim.Add(new List<string> { tactileDisks[2], tactileDisks[0]});
+        CounterBalancedStim.Add(new List<string> { tactileDisks[2], tactileDisks[1]});
+        CounterBalancedStim.Add(new List<string> { tactileDisks[2], tactileDisks[2]});
+        CounterBalancedStim.Add(new List<string> { tactileDisks[2], tactileDisks[3]});
+        CounterBalancedStim.Add(new List<string> { tactileDisks[2], tactileDisks[4]});
+
+/*        foreach (var item in CounterBalancedStimDic)
+        {
+            Debug.Log("Key " + item.Key + " Value " + item.Value[0].ToString());
+        }
+*/
         switch (dataRecorder.Condition)
         {
             case "V":
@@ -58,13 +79,15 @@ public class StimulusGeneration : MonoBehaviour
 
             case "VTEqual":
 
-                TactileReferenceStim = "B11";
-                VisualReferenceStim = "B11";
+                /*  TactileReferenceStim = "B11";
+                  VisualReferenceStim = "B11";*/
+              
 
-                BlockTactileStim = ShuffleList(RepeatList(tactileDisks, numberOfRepetitions));
+                BlockTactileStim = ShuffleList(RepeatList(Enumerable.Range(0,CounterBalancedStim.Count).ToList(), numberOfRepetitions));
                 BlockVisualStim = BlockTactileStim;
-                BlockTestingStimPosition = ShuffleList(RepeatList(new List<int> { 1, 2 }, numberOfRepetitions));
 
+                foreach (int i in BlockTactileStim)
+                { Debug.Log(" stim: " + string.Join(",", CounterBalancedStim[i].ToArray())); }
                 break;
 
             case "V<T": // in terms of disk number
