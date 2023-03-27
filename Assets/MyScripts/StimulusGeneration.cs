@@ -40,7 +40,7 @@ public class StimulusGeneration : MonoBehaviour
         dataRecorder = GetComponent<DataRecorder>();
         testingSequence = GetComponent<TestingSequence>();
 
-        numberOfRepetitions = 10;
+        numberOfRepetitions = 1;
 
         tactileDisks = new List<string>() { "B7", "B9", "B11", "B13", "B15" };
 
@@ -65,7 +65,7 @@ public class StimulusGeneration : MonoBehaviour
     void CreateStimulus() 
     {
 
-        switch (dataRecorder.Condition)
+        switch (dataRecorder.condition)
         {
             case "V":
                 visualDisks = tactileDisks;
@@ -99,10 +99,11 @@ public class StimulusGeneration : MonoBehaviour
 
         blockStimPair = ShuffleList(RepeatList(Enumerable.Range(0, 10).ToList(), numberOfRepetitions));
         Debug.Log("Stimulus Created");
-        foreach(int i in blockStimPair)
-        { Debug.Log(i); }
-        
-        
+        Debug.Log("tactileStimPair" + tactileStimPair.Count);
+/*        foreach (int i in blockStimPair)
+        { Debug.Log(i); }*/
+
+
         testingSequence.onStimulusCreated.Invoke();
     }
 
@@ -122,17 +123,19 @@ public class StimulusGeneration : MonoBehaviour
       
         //couterbalanced stimulus for touch
         List<List<string>> stimPair = new List<List<string>>(10);
-        stimPair.Add(new List<string> { diskList[0], diskList[2] });
-        stimPair.Add(new List<string> { diskList[1], diskList[2] });
-        stimPair.Add(new List<string> { diskList[2], diskList[2] });
-        stimPair.Add(new List<string> { diskList[3], diskList[2] });
-        stimPair.Add(new List<string> { diskList[4], diskList[2] });
+
         stimPair.Add(new List<string> { diskList[2], diskList[0] });
         stimPair.Add(new List<string> { diskList[2], diskList[1] });
         stimPair.Add(new List<string> { diskList[2], diskList[2] });
         stimPair.Add(new List<string> { diskList[2], diskList[3] });
         stimPair.Add(new List<string> { diskList[2], diskList[4] });
 
+        stimPair.Add(new List<string> { diskList[0], diskList[2] });
+        stimPair.Add(new List<string> { diskList[1], diskList[2] });
+        stimPair.Add(new List<string> { diskList[2], diskList[2] });
+        stimPair.Add(new List<string> { diskList[3], diskList[2] });
+        stimPair.Add(new List<string> { diskList[4], diskList[2] });
+       
         return stimPair;
     }
 

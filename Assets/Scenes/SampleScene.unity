@@ -688,7 +688,7 @@ MonoBehaviour:
   onTrialFinish:
     m_PersistentCalls:
       m_Calls: []
-  IsResponseMade: 0
+  isResponseMade: 0
 --- !u!114 &742788605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -721,11 +721,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1199ad4f772dc364ea83f3b9f70909c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
-  Initial: GW
-  Age: 28
-  Gender: M
-  Condition: V<T
+  id: 1
+  initial: GW
+  age: 28
+  gender: M
+  condition: V=T
 --- !u!1001 &793558729
 PrefabInstance:
   m_ObjectHideFlags: 0

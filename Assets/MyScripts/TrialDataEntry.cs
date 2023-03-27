@@ -15,17 +15,19 @@ public class TrialDataEntry
     
 
   
-    public int CurrentTrialNumber { get; set; }
+    public int TrialNumber { get; set; }
     public int StimPairIndex { get; set; }
-    /*public int TestingStimPosition { get; set; }*/
+    public bool IsTestingStimAtPos2 { get; set; }
     public string S1Vision { get; set; }
     public string S1Touch { get; set; }
     public string S2Vision { get; set; }
     public string S2Touch { get; set; }
 
         
-    public int CurrentResponse { get; set; }
-    public bool IsTestingStimulusHigherFreq { get; set; }
+    public string Response { get; set; }
+    public string TargetResponse { get; set; }
+    public bool RespResult { get; set; }
+
     public float TrialDuration { get; set; }
     public float ResponseTime { get; set; }
 
@@ -35,8 +37,10 @@ public class TrialDataEntry
     public float S1Offset { get; set; }
     public float S2Onset { get; set; }
     public float S2Offset { get; set; }
+    public float ResponseCued { get; set; }
     public float ResponseMade { get; set; }
-    
+    public float TrialEndTime { get; set; }
+
 
 
     //constructer declaration

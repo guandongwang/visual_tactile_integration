@@ -6,8 +6,8 @@ using UnityEngine.Events;
 public class TestingSequence : MonoBehaviour
 {
 
-    public int BlockCount;
-    public int TrialCount;
+    public int blockCount;
+    public int maxBlockNumber;
 
     public UnityEvent onInputFinish;
     public UnityEvent onStimulusCreated;
@@ -20,7 +20,10 @@ public class TestingSequence : MonoBehaviour
 
     DataRecorder dataRecorder;
     StimulusGeneration stimulusGeneration;
-    public bool IsResponseMade;
+
+    public bool isResponseMade;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -49,14 +52,16 @@ public class TestingSequence : MonoBehaviour
         }
 
         onBlockStart.AddListener(StartBlock);
-
+        
+        blockCount = 0;
+        maxBlockNumber = 2;
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.Space) && onBlockStart != null)
+        if (Input.GetKeyDown(KeyCode.Space) && onBlockStart != null && blockCount < maxBlockNumber)
         {
             onInputFinish.Invoke();
             
@@ -71,25 +76,74 @@ public class TestingSequence : MonoBehaviour
 
     IEnumerator ExperimentBlock()
     {
-        Debug.Log("Block " + BlockCount + " Start");
-
-        int TrialCount = 0;
+        Debug.Log("Block " + (blockCount + 1) + " Start");
+        
 
         foreach (TrialDataEntry entry in dataRecorder.trialData)
         {
+            isResponseMade = false;
+            /*   entry.TrialStartTime = Time.time;
+               Debug.Log(entry.GetValues());
+               yield return null;*/
+            //Trial Start
+            entry.TrialStartTime = Time.time;
+            Debug.Log("Trial " + entry.TrialNumber + " Start");
 
-            Debug.Log("Trial " + TrialCount + " Start");
+            //S1 Onset
+            entry.S1Onset = Time.time;
+            Debug.Log("S1 Touch: " + entry.S1Touch + ", S1 Vision: " + entry.S1Vision);
+            //S1 Offset
+            entry.S1Offset = Time.time;
 
-            Debug.Log("Stimulus 1 Touch: " + entry.S1Touch);
 
+            //Trial Start
+            entry.S2Onset = Time.time;
+            Debug.Log("S2 Touch: " + entry.S2Touch + ", S2 Vision: " + entry.S2Vision);
+       
 
-            TrialCount++;
+            //S2 Offset
+            entry.S2Offset = Time.time;
+
+            //Response Cued
+            entry.ResponseCued = Time.time;
+
+            while (!isResponseMade)
+            {
+                if (Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    entry.Response = "L"; //First stim higher freq
+                    isResponseMade = true;
+                }
+
+                else if (Input.GetKeyDown(KeyCode.RightArrow))
+                {
+                    entry.Response = "R"; //Second stim higher freq
+                    isResponseMade = true;
+                }
+                yield return null;
+            }
+            //Response Made
+            entry.RespResult = entry.TargetResponse.Contains(entry.Response);
+            Debug.Log("Resp Result: " + entry.RespResult);
+
+            //Response Made
+            entry.ResponseMade = Time.time;
+            //Response Time
+            entry.ResponseTime = entry.ResponseMade - entry.ResponseCued;
+
             yield return new WaitForSeconds(.1f);
+     
+
+            //Trial End
+            entry.TrialEndTime = Time.time;
+            //Trial Duration
+            entry.TrialDuration = entry.TrialEndTime - entry.TrialStartTime;
+
+            Debug.Log(entry.GetHeaders());
             Debug.Log(entry.GetValues());
-
         }
-
-
+        blockCount++;
+        onBlockFinish.Invoke();
     }
 
 }
