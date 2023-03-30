@@ -22,7 +22,8 @@ public class TestingSequence : MonoBehaviour
     StimulusGeneration stimulusGeneration;
 
     public bool isResponseMade;
-
+    public bool IsBlockRunning;
+    public bool IsEyeTrackingCalibrated = false;
 
 
     // Start is called before the first frame update
@@ -55,16 +56,21 @@ public class TestingSequence : MonoBehaviour
         
         blockCount = 0;
         maxBlockNumber = 2;
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        bool _isBlockReady = IsEyeTrackingCalibrated
+            && !IsBlockRunning 
+            && onBlockStart != null 
+            && blockCount < maxBlockNumber;
 
-        if (Input.GetKeyDown(KeyCode.Space) && onBlockStart != null && blockCount < maxBlockNumber)
+        if (Input.GetKeyDown(KeyCode.Space) & _isBlockReady)
         {
-            onInputFinish.Invoke();
-            
+            onInputFinish.Invoke(); 
         }
 
     }
@@ -76,6 +82,7 @@ public class TestingSequence : MonoBehaviour
 
     IEnumerator ExperimentBlock()
     {
+        IsBlockRunning = true;
         Debug.Log("Block " + (blockCount + 1) + " Start");
         
 
@@ -143,6 +150,7 @@ public class TestingSequence : MonoBehaviour
             Debug.Log(entry.GetValues());
         }
         blockCount++;
+        IsBlockRunning = false;
         onBlockFinish.Invoke();
     }
 

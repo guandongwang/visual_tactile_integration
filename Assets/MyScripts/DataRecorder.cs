@@ -4,11 +4,13 @@ using UnityEngine;
 using System.IO;
 using System.Text;
 
+
+
 public class DataRecorder : MonoBehaviour
 {
     TestingSequence testingSequence;
     StimulusGeneration stimulusGeneration;
-
+    FrameDataRecorder frameDataRecorder;
     public List<TrialDataEntry> trialData;
     
    
@@ -29,6 +31,7 @@ public class DataRecorder : MonoBehaviour
 
         testingSequence = GetComponent<TestingSequence>();
         stimulusGeneration = GetComponent<StimulusGeneration>();
+        frameDataRecorder = GetComponent<FrameDataRecorder>();
 
         testingSequence.onStimulusCreated.AddListener(CreateDataFile);
         /*testingSequence.onBlockStart.AddListener(FinishDataPrep);*/
@@ -124,6 +127,7 @@ public class DataRecorder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+/*        Debug.Log(transform.position);
+        Debug.Log(transform.rotation);*/
     }
 }
