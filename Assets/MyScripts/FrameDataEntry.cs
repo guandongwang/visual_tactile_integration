@@ -23,7 +23,6 @@ public class FrameDataEntry
     public string TouchWheelMessage { get; set; }
     public string EventsLog { get; set; }
 
-
     public float HeadPositionX { get; set; }
     public float HeadPositionY { get; set; }
     public float HeadPositionZ { get; set; }
@@ -39,14 +38,6 @@ public class FrameDataEntry
     public float TrackerRotationX { get; set; }
     public float TrackerRotationY { get; set; }
     public float TrackerRotationZ { get; set; }
-
-    public float GazeOriginCombinedLocalX { get; set; }
-    public float GazeOriginCombinedLocalY { get; set; }
-    public float GazeOriginCombinedLocalZ { get; set; }
-
-    public float GazeDirectionCombinedLocalX { get; set; }
-    public float GazeDirectionCombinedLocalY { get; set; }
-    public float GazeDirectionCombinedLocalZ { get; set; }
 
     public float VectGazeOriginX { get; set; }
     public float VectGazeOriginY { get; set; }

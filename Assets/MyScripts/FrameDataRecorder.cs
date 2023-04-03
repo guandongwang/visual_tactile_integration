@@ -74,17 +74,17 @@ public class FrameDataRecorder : MonoBehaviour
         _frameDataEntry.TouchWheelMessage = "";
 
 
-        _frameDataEntry.EventsLog = "";
-   /*     if (CurrEvent != PrevEvent)
+        /* _frameDataEntry.EventsLog = "";*/
+        if (CurrEvent != PrevEvent)
         {
             PrevEvent = CurrEvent;
-            _frameDataEntry.EventsLog = "\"" + CurrEvent + "\"";
+            _frameDataEntry.EventsLog = CurrEvent;
         }
         else
         {
             _frameDataEntry.EventsLog = "";
         }
-*/
+
         //Head
         _frameDataEntry.HeadPositionX = mainCamera.transform.position.x;
         _frameDataEntry.HeadPositionY = mainCamera.transform.position.y;
@@ -98,14 +98,6 @@ public class FrameDataRecorder : MonoBehaviour
         _frameDataEntry.TrackerPositionX = tracker.transform.position.x;
         _frameDataEntry.TrackerPositionY = tracker.transform.position.y;
         _frameDataEntry.TrackerPositionZ = tracker.transform.position.z;
-
-        _frameDataEntry.GazeOriginCombinedLocalX = eyeTracking.GazeOriginCombinedLocal.x;
-        _frameDataEntry.GazeOriginCombinedLocalX = eyeTracking.GazeOriginCombinedLocal.y;
-        _frameDataEntry.GazeOriginCombinedLocalX = eyeTracking.GazeOriginCombinedLocal.z;
-
-        _frameDataEntry.GazeDirectionCombinedLocalX = eyeTracking.GazeDirectionCombinedLocal.x;
-        _frameDataEntry.GazeDirectionCombinedLocalX = eyeTracking.GazeDirectionCombinedLocal.y;
-        _frameDataEntry.GazeDirectionCombinedLocalX = eyeTracking.GazeDirectionCombinedLocal.z;
 
         _frameDataEntry.VectGazeOriginX = eyeTracking.vectGazeOrigin.x;
         _frameDataEntry.VectGazeOriginY = eyeTracking.vectGazeOrigin.y;

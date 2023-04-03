@@ -44,6 +44,7 @@ public class StimulusGeneration : MonoBehaviour
 
         tactileDisks = new List<string>() { "B7", "B9", "B11", "B13", "B15" };
 
+        
         tactileDisksDic = new Dictionary<string, string>(5);
         tactileDisksDic.Add(tactileDisks[0], "A");
         tactileDisksDic.Add(tactileDisks[1], "B");
