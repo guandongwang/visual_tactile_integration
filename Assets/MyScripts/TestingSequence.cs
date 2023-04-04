@@ -70,7 +70,8 @@ public class TestingSequence : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) & _isBlockReady)
         {
-            onInputFinish.Invoke(); 
+            onInputFinish.Invoke();
+            EventManager.TriggerEvent("InputFinish", null);
         }
 
     }

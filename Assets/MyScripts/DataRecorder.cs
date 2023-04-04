@@ -37,12 +37,20 @@ public class DataRecorder : MonoBehaviour
         /*testingSequence.onBlockStart.AddListener(FinishDataPrep);*/
         /* testingSequence.onBlockStart.AddListener(StartDataRecording);*/
         testingSequence.onBlockFinish.AddListener(SaveToCSV);
+       
     }
 
-    /*void DataPrep() 
-    { StartCoroutine(CreateDataFile()); }*/
+    void OnEnable()
+    {
+        EventManager.StartListening("InputFinish", OnInputFinish);
+    }
+    void OnInputFinish(Dictionary<string, object> message)
+    { Debug.Log("Event Manager Works"); }
 
-
+    void OnDisable()
+    {
+        EventManager.StopListening("InputFinish", OnInputFinish);
+    }
 
     void CreateDataFile()
     {

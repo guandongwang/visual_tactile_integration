@@ -15,22 +15,18 @@ public class EyeTracking : MonoBehaviour
     private bool eye_callback_registered = false;
 
     TestingSequence _testingSequnence;
+
+    [SerializeField] private bool tryEyeTrackingCalibrate = false;
+
+
+
     void Start()
     {
         GameObject _device = GameObject.Find("Device");
         _testingSequnence = _device.GetComponent<TestingSequence>();
 
 
-        if (SRanipal_Eye_v2.LaunchEyeCalibration() == true)
-        {
-            _testingSequnence.IsEyeTrackingCalibrated = true;
-        }
-        else
-        {
-            /*  _testingSequnence.IsEyeTrackingCalibrated = true;*/
-            _testingSequnence.IsEyeTrackingCalibrated = false;
-        }
-
+        EyeTrackingCalibration();
 
         if (!SRanipal_Eye_Framework.Instance.EnableEye)
         {
@@ -42,6 +38,11 @@ public class EyeTracking : MonoBehaviour
 
     private void Update()
     {
+        if (_testingSequnence.IsEyeTrackingCalibrated == false && tryEyeTrackingCalibrate == true)
+        {
+            tryEyeTrackingCalibrate = false;
+            EyeTrackingCalibration();
+        }
 
         if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING &&
                          SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.NOT_SUPPORT) return;
@@ -78,6 +79,20 @@ public class EyeTracking : MonoBehaviour
         VectGazeDirection = eyeData.verbose_data.combined.eye_data.gaze_direction_normalized;
         VectGazeOrigin = eyeData.verbose_data.combined.eye_data.gaze_origin_mm;
         Debug.Log("Origin: " + GazeOriginCombinedLocal + ", Direction: " + GazeDirectionCombinedLocal);
+    }
+
+    void EyeTrackingCalibration()
+    {
+        if (SRanipal_Eye_v2.LaunchEyeCalibration() == true)
+        {
+            _testingSequnence.IsEyeTrackingCalibrated = true;
+            EventManager.TriggerEvent("EyeTrackingCalibrated", null);
+        }
+        else
+        {
+            _testingSequnence.IsEyeTrackingCalibrated = false;
+        }
+
     }
     private void Release()
     {
