@@ -6,16 +6,8 @@ using System;
 using System.Reflection;
 using System.Linq;
 using ViveSR.anipal.Eye;
-public class FrameDataEntry
+public class FrameDataEntry : DataEntry
 {
-    public int ID { get; set; }
-    public string Initial { get; set; }
-    public int Age { get; set; }
-    public string Gender { get; set; }
-    public string Condition { get; set; }
-
-
-
     public int Frame { get; set; }
     public float Time { get; set; }
 
@@ -47,35 +39,9 @@ public class FrameDataEntry
     public float VectGazeDirectionY { get; set; }
     public float VectGazeDirectionZ { get; set; }
 
-
-    //constructer declaration
     public FrameDataEntry(int id, String initial, int age, string gender, string condition)
-
-    {
-
-        ID = id;
-        Initial = initial;
-        Age = age;
-        Gender = gender;
-        Condition = condition;
-
-    }
-
-    public string GetValues()
-    {
-        return string.Join(", ", typeof(FrameDataEntry).GetProperties().Select(p => p.GetValue(this)));
-
-    }
-
-    public string GetHeaders()
-    {
-
-        return string.Join(", ", typeof(FrameDataEntry).GetProperties().Select(p => p.Name));
-
-    }
-
-
-
-
-
+        : base(id, initial, age, gender, condition) { }
+    public FrameDataEntry(DataEntry dataEntry)
+        : base(dataEntry.ID, dataEntry.Initial, dataEntry.Age, dataEntry.Gender, dataEntry.Condition) { }
+    
 }

@@ -5,16 +5,9 @@ using System;
 using System.Reflection;
 using System.Linq;
 
-public class TrialDataEntry
+public class TrialDataEntry : DataEntry
 {
-    public int ID { get; set; }
-    public string Initial { get; set; }    
-    public int Age { get; set; }
-    public string Gender { get; set; }
-    public string Condition { get; set; }
-    
 
-  
     public int TrialNumber { get; set; }
     public int StimPairIndex { get; set; }
     public bool IsTestingStimAtPos2 { get; set; }
@@ -43,34 +36,10 @@ public class TrialDataEntry
 
 
 
-    //constructer declaration
-    public TrialDataEntry(int id, String initial, int age, string gender, string condition) 
-                
-    {
+    public TrialDataEntry(int id, String initial, int age, string gender, string condition)
+    : base(id, initial, age, gender, condition) { }
 
-        ID = id;
-        Initial = initial;
-        Age = age;
-        Gender = gender;
-        Condition = condition;
+    public TrialDataEntry(DataEntry dataEntry)
+      : base(dataEntry.ID, dataEntry.Initial, dataEntry.Age, dataEntry.Gender, dataEntry.Condition) { }
 
-    }
-
-    public string GetValues()
-    {
-        return string.Join(", ", typeof(TrialDataEntry).GetProperties().Select(p => p.GetValue(this)));
-
-    }
-
-    public string GetHeaders()
-    {
-
-        return string.Join(", ", typeof(TrialDataEntry).GetProperties().Select(p => p.Name));
-  
-    }
-
-
- 
-
-      
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputInfo : MonoBehaviour
+public class InfoInspector : MonoBehaviour
 {
     [Header("Session Info")]
     public int id;
@@ -16,6 +16,24 @@ public class InputInfo : MonoBehaviour
     public bool IsEyeTrackingNeeded;
     public int NumberOfBlocks;
     public int NumberOfRepetitions;
+
+    [Space]
+    [Header("Status Monitor")]
+    public bool IsEyeTrackingCalibrated;
+    public bool IsInputFinished;
+    public bool IsStimulusCreated;
+    public bool IsBlockRunning;
+    public bool IsResponseMade;
+    public bool IsFileSaved;
+
+    public int CurrentBlock;
+    public int CurrentTrial;
+
+
+
+    [Space]
+    [Header("Action")]
+    public bool tryEyeCalibration;
 
 
     // Start is called before the first frame update

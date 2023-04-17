@@ -16,6 +16,8 @@ public class EyeTracking : MonoBehaviour
 
     TestingSequence _testingSequnence;
 
+    InfoInspector _infoInspector;
+
     [SerializeField] private bool tryEyeTrackingCalibrate = false;
 
 
@@ -24,6 +26,8 @@ public class EyeTracking : MonoBehaviour
     {
         GameObject _device = GameObject.Find("Device");
         _testingSequnence = _device.GetComponent<TestingSequence>();
+
+  
 
 
         EyeTrackingCalibration();

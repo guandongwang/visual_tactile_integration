@@ -21,6 +21,8 @@ public class TestingSequence : MonoBehaviour
     DataRecorder dataRecorder;
     StimulusGeneration stimulusGeneration;
 
+    InfoInspector _infoInspector;
+
     public bool isResponseMade;
     public bool IsBlockRunning;
     public bool IsEyeTrackingCalibrated = false;
