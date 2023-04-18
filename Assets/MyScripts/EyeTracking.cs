@@ -14,23 +14,21 @@ public class EyeTracking : MonoBehaviour
     private static EyeData_v2 eyeData = new EyeData_v2();
     private bool eye_callback_registered = false;
 
-    TestingSequence _testingSequnence;
+    TestingSequence testingSequnence;
 
-    InfoInspector _infoInspector;
+    InfoInspector infoInspector;
 
-    [SerializeField] private bool tryEyeTrackingCalibrate = false;
+  
 
 
 
     void Start()
     {
-        GameObject _device = GameObject.Find("Device");
-        _testingSequnence = _device.GetComponent<TestingSequence>();
 
-  
+        GameObject script = GameObject.Find("Scripts");
+        infoInspector = script.GetComponent<InfoInspector>();
+        testingSequnence = script.GetComponent<TestingSequence>();
 
-
-        EyeTrackingCalibration();
 
         if (!SRanipal_Eye_Framework.Instance.EnableEye)
         {
@@ -42,60 +40,62 @@ public class EyeTracking : MonoBehaviour
 
     private void Update()
     {
-        if (_testingSequnence.IsEyeTrackingCalibrated == false && tryEyeTrackingCalibrate == true)
-        {
-            tryEyeTrackingCalibrate = false;
+      
+            if (infoInspector.TryEyeCalibration)
+            {
+            infoInspector.TryEyeCalibration = false;
             EyeTrackingCalibration();
-        }
+                
+            }
 
-        if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING &&
-                         SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.NOT_SUPPORT) return;
+            if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING &&
+                             SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.NOT_SUPPORT) return;
 
-        if (SRanipal_Eye_Framework.Instance.EnableEyeDataCallback == true && eye_callback_registered == false)
-        {
-            SRanipal_Eye_v2.WrapperRegisterEyeDataCallback(Marshal.GetFunctionPointerForDelegate((SRanipal_Eye_v2.CallbackBasic)EyeCallback));
-            eye_callback_registered = true;
-        }
-        else if (SRanipal_Eye_Framework.Instance.EnableEyeDataCallback == false && eye_callback_registered == true)
-        {
-            SRanipal_Eye_v2.WrapperUnRegisterEyeDataCallback(Marshal.GetFunctionPointerForDelegate((SRanipal_Eye_v2.CallbackBasic)EyeCallback));
-            eye_callback_registered = false;
-        }
+            if (SRanipal_Eye_Framework.Instance.EnableEyeDataCallback == true && eye_callback_registered == false)
+            {
+                SRanipal_Eye_v2.WrapperRegisterEyeDataCallback(Marshal.GetFunctionPointerForDelegate((SRanipal_Eye_v2.CallbackBasic)EyeCallback));
+                eye_callback_registered = true;
+            }
+            else if (SRanipal_Eye_Framework.Instance.EnableEyeDataCallback == false && eye_callback_registered == true)
+            {
+                SRanipal_Eye_v2.WrapperUnRegisterEyeDataCallback(Marshal.GetFunctionPointerForDelegate((SRanipal_Eye_v2.CallbackBasic)EyeCallback));
+                eye_callback_registered = false;
+            }
 
-        Vector3 GazeOriginCombinedLocal, GazeDirectionCombinedLocal;
+            Vector3 GazeOriginCombinedLocal, GazeDirectionCombinedLocal;
 
-        //not needed if i use cam's way
-        if (eye_callback_registered)
-        {
-            if (SRanipal_Eye_v2.GetGazeRay(GazeIndex.COMBINE, out GazeOriginCombinedLocal, out GazeDirectionCombinedLocal, eyeData)) { }
-            else if (SRanipal_Eye_v2.GetGazeRay(GazeIndex.LEFT, out GazeOriginCombinedLocal, out GazeDirectionCombinedLocal, eyeData)) { }
-            else if (SRanipal_Eye_v2.GetGazeRay(GazeIndex.RIGHT, out GazeOriginCombinedLocal, out GazeDirectionCombinedLocal, eyeData)) { }
-            else return;
-        }
-        else
-        {
-            if (SRanipal_Eye_v2.GetGazeRay(GazeIndex.COMBINE, out GazeOriginCombinedLocal, out GazeDirectionCombinedLocal)) { }
-            else if (SRanipal_Eye_v2.GetGazeRay(GazeIndex.LEFT, out GazeOriginCombinedLocal, out GazeDirectionCombinedLocal)) { }
-            else if (SRanipal_Eye_v2.GetGazeRay(GazeIndex.RIGHT, out GazeOriginCombinedLocal, out GazeDirectionCombinedLocal)) { }
-            else return;
-        }
+            //not needed if i use cam's way
+            if (eye_callback_registered)
+            {
+                if (SRanipal_Eye_v2.GetGazeRay(GazeIndex.COMBINE, out GazeOriginCombinedLocal, out GazeDirectionCombinedLocal, eyeData)) { }
+                else if (SRanipal_Eye_v2.GetGazeRay(GazeIndex.LEFT, out GazeOriginCombinedLocal, out GazeDirectionCombinedLocal, eyeData)) { }
+                else if (SRanipal_Eye_v2.GetGazeRay(GazeIndex.RIGHT, out GazeOriginCombinedLocal, out GazeDirectionCombinedLocal, eyeData)) { }
+                else return;
+            }
+            else
+            {
+                if (SRanipal_Eye_v2.GetGazeRay(GazeIndex.COMBINE, out GazeOriginCombinedLocal, out GazeDirectionCombinedLocal)) { }
+                else if (SRanipal_Eye_v2.GetGazeRay(GazeIndex.LEFT, out GazeOriginCombinedLocal, out GazeDirectionCombinedLocal)) { }
+                else if (SRanipal_Eye_v2.GetGazeRay(GazeIndex.RIGHT, out GazeOriginCombinedLocal, out GazeDirectionCombinedLocal)) { }
+                else return;
+            }
 
-        VectGazeDirection = eyeData.verbose_data.combined.eye_data.gaze_direction_normalized;
-        VectGazeOrigin = eyeData.verbose_data.combined.eye_data.gaze_origin_mm;
-        Debug.Log("Origin: " + GazeOriginCombinedLocal + ", Direction: " + GazeDirectionCombinedLocal);
-    }
+            VectGazeDirection = eyeData.verbose_data.combined.eye_data.gaze_direction_normalized;
+            VectGazeOrigin = eyeData.verbose_data.combined.eye_data.gaze_origin_mm;
+           /* Debug.Log("Origin: " + GazeOriginCombinedLocal + ", Direction: " + GazeDirectionCombinedLocal);*/
+        }
+   
 
     void EyeTrackingCalibration()
     {
-        if (SRanipal_Eye_v2.LaunchEyeCalibration() == true)
+
+        if (SRanipal_Eye_v2.LaunchEyeCalibration())
         {
-            _testingSequnence.IsEyeTrackingCalibrated = true;
+            infoInspector.IsEyeTrackingCalibrated = true;
             EventManager.TriggerEvent("EyeTrackingCalibrated", null);
         }
         else
-        {
-            _testingSequnence.IsEyeTrackingCalibrated = false;
-        }
+        { infoInspector.IsEyeTrackingCalibrated = false; }
 
     }
     private void Release()

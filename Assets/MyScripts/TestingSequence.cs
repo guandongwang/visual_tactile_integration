@@ -6,26 +6,12 @@ using UnityEngine.Events;
 public class TestingSequence : MonoBehaviour
 {
 
-    public int blockCount;
-    public int maxBlockNumber;
 
-    public UnityEvent onInputFinish;
-    public UnityEvent onStimulusCreated;
 
-    public UnityEvent onBlockStart;
-    public UnityEvent onBlockFinish;
-
-    public UnityEvent onTrialStart;
-    public UnityEvent onTrialFinish;
 
     DataRecorder dataRecorder;
     StimulusGeneration stimulusGeneration;
-
-    InfoInspector _infoInspector;
-
-    public bool isResponseMade;
-    public bool IsBlockRunning;
-    public bool IsEyeTrackingCalibrated = false;
+    InfoInspector infoInspector;
 
 
     // Start is called before the first frame update
@@ -33,68 +19,44 @@ public class TestingSequence : MonoBehaviour
     {
         dataRecorder = GetComponent<DataRecorder>();
         stimulusGeneration = GetComponent<StimulusGeneration>();
-
-        if (onInputFinish == null)
-        {
-            onInputFinish = new UnityEvent();
-        }
-
-        if (onStimulusCreated == null)
-        {
-            onStimulusCreated = new UnityEvent();
-        }
-
-        if (onBlockStart == null)
-        {
-            onBlockStart = new UnityEvent();
-        }
-
-        if (onBlockFinish == null)
-        {
-            onBlockFinish = new UnityEvent();
-        }
-
-        onBlockStart.AddListener(StartBlock);
-        
-        blockCount = 0;
-        maxBlockNumber = 2;
-
+        infoInspector = GetComponent<InfoInspector>();
 
     }
 
     // Update is called once per frame
     void Update()
-    {
-        bool _isBlockReady = IsEyeTrackingCalibrated
-            && !IsBlockRunning 
-            && onBlockStart != null 
-            && blockCount < maxBlockNumber;
+    {       
 
-        if (Input.GetKeyDown(KeyCode.Space) & _isBlockReady)
+        bool readyToCreateStimulus = infoInspector.IsEyeTrackingCalibrated
+            && !infoInspector.IsBlockRunning
+            && infoInspector.CurrentBlock < infoInspector.NumberOfBlocks;
+
+        if (Input.GetKeyDown(KeyCode.Space) & readyToCreateStimulus)
         {
-            onInputFinish.Invoke();
             EventManager.TriggerEvent("InputFinish", null);
+            EventManager.StartListening("DataFileReady", StartBlock);
         }
 
+        
     }
 
-    void StartBlock()
+    void StartBlock(Dictionary<string, object> message)
     { 
         StartCoroutine(ExperimentBlock()); 
     }
 
     IEnumerator ExperimentBlock()
     {
-        IsBlockRunning = true;
-        Debug.Log("Block " + (blockCount + 1) + " Start");
+        infoInspector.IsBlockRunning = true;
+
+        Debug.Log("Block " + (infoInspector.CurrentBlock + 1) + " Start");
         
 
         foreach (TrialDataEntry entry in dataRecorder.trialData)
         {
-            isResponseMade = false;
-            /*   entry.TrialStartTime = Time.time;
-               Debug.Log(entry.GetValues());
-               yield return null;*/
+            infoInspector.CurrentTrial = entry.TrialNumber + 1;
+
+            infoInspector.IsResponseMade = false;
             //Trial Start
             entry.TrialStartTime = Time.time;
             Debug.Log("Trial " + entry.TrialNumber + " Start");
@@ -117,18 +79,18 @@ public class TestingSequence : MonoBehaviour
             //Response Cued
             entry.ResponseCued = Time.time;
 
-            while (!isResponseMade)
+            while (!infoInspector.IsResponseMade)
             {
                 if (Input.GetKeyDown(KeyCode.LeftArrow))
                 {
                     entry.Response = "L"; //First stim higher freq
-                    isResponseMade = true;
+                    infoInspector.IsResponseMade = true;
                 }
 
                 else if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
                     entry.Response = "R"; //Second stim higher freq
-                    isResponseMade = true;
+                    infoInspector.IsResponseMade = true;
                 }
                 yield return null;
             }
@@ -152,9 +114,9 @@ public class TestingSequence : MonoBehaviour
             Debug.Log(entry.GetHeaders());
             Debug.Log(entry.GetValues());
         }
-        blockCount++;
-        IsBlockRunning = false;
-        onBlockFinish.Invoke();
+        infoInspector.CurrentBlock++;
+        infoInspector.IsBlockRunning = false;
+        EventManager.TriggerEvent("BlockFinished", null);
     }
 
 }

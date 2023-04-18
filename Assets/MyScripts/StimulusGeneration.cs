@@ -34,6 +34,16 @@ public class StimulusGeneration : MonoBehaviour
     public List<int> blockStimPair;
 
 
+    void OnEnable()
+    {
+        EventManager.StartListening("InputFinish", CreateStimulus);
+    }
+
+    void OnDisable()
+    {
+        EventManager.StopListening("InputFinish", CreateStimulus);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -52,18 +62,12 @@ public class StimulusGeneration : MonoBehaviour
         tactileDisksDic.Add(tactileDisks[3], "D");
         tactileDisksDic.Add(tactileDisks[4], "E");
 
-        testingSequence.onInputFinish.AddListener(CreateStimulus);
+        
     }
 
 
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    void CreateStimulus() 
+    void CreateStimulus(Dictionary<string, object> message) 
     {
 
         switch (dataRecorder.condition)
@@ -101,11 +105,11 @@ public class StimulusGeneration : MonoBehaviour
         blockStimPair = ShuffleList(RepeatList(Enumerable.Range(0, 10).ToList(), numberOfRepetitions));
         Debug.Log("Stimulus Created");
         Debug.Log("tactileStimPair" + tactileStimPair.Count);
-/*        foreach (int i in blockStimPair)
-        { Debug.Log(i); }*/
+        /*        foreach (int i in blockStimPair)
+                { Debug.Log(i); }*/
 
 
-        testingSequence.onStimulusCreated.Invoke();
+        EventManager.TriggerEvent("StimulusCreated", null);
     }
 
     List<List<string>> DummyStimPair()

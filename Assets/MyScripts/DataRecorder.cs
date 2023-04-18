@@ -33,26 +33,22 @@ public class DataRecorder : MonoBehaviour
         stimulusGeneration = GetComponent<StimulusGeneration>();
         frameDataRecorder = GetComponent<FrameDataRecorder>();
 
-        testingSequence.onStimulusCreated.AddListener(CreateDataFile);
-        /*testingSequence.onBlockStart.AddListener(FinishDataPrep);*/
-        /* testingSequence.onBlockStart.AddListener(StartDataRecording);*/
-        testingSequence.onBlockFinish.AddListener(SaveToCSV);
        
     }
 
     void OnEnable()
     {
-        EventManager.StartListening("InputFinish", OnInputFinish);
+        EventManager.StartListening("StimulusCreated", CreateDataFile);
+        EventManager.StartListening("BlockFinished", SaveToCSV);
     }
-    void OnInputFinish(Dictionary<string, object> message)
-    { Debug.Log("Event Manager Works"); }
 
     void OnDisable()
     {
-        EventManager.StopListening("InputFinish", OnInputFinish);
+        EventManager.StopListening("StimulusCreated", CreateDataFile);
     }
 
-    void CreateDataFile()
+    
+    void CreateDataFile(Dictionary<string, object> message)
     {
        
         trialData = new List<TrialDataEntry>();
@@ -101,10 +97,10 @@ public class DataRecorder : MonoBehaviour
           
         }
 
-        testingSequence.onBlockStart.Invoke();
+        EventManager.TriggerEvent("DataFileReady", null);
     }
 
-    void SaveToCSV()
+    void SaveToCSV(Dictionary<string, object> message)
     {
         string _folderPath = @"C:/Users/gwan5836/OneDrive - The University of Sydney (Staff)/2023/vr texture integration/raw data/" + trialData[0].ID + "_" + trialData[0].Initial;
         string _trialDataFileName = "trial_" + trialData[0].ID + "_" + trialData[0].Initial + "_" + trialData[0].Condition + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
@@ -135,7 +131,6 @@ public class DataRecorder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-/*        Debug.Log(transform.position);
-        Debug.Log(transform.rotation);*/
+
     }
 }

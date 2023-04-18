@@ -5,35 +5,35 @@ using UnityEngine;
 public class InfoInspector : MonoBehaviour
 {
     [Header("Session Info")]
-    public int id;
-    public string initial;
-    public int age;
+    public int id = 1;
+    public string initial = "test";
+    public int age = 25;
     public Gender gender = new ();
     public Condition condition = new ();
 
     [Space]
     [Header("Block Info")]
-    public bool IsEyeTrackingNeeded;
-    public int NumberOfBlocks;
-    public int NumberOfRepetitions;
+    public int NumberOfBlocks = 1;
+    public int NumberOfRepetitions = 1;
 
     [Space]
     [Header("Status Monitor")]
-    public bool IsEyeTrackingCalibrated;
-    public bool IsInputFinished;
-    public bool IsStimulusCreated;
-    public bool IsBlockRunning;
-    public bool IsResponseMade;
-    public bool IsFileSaved;
+    public bool IsEyeTrackingCalibrated = false;
+    public bool IsInputFinished = false;
+    public bool IsStimulusCreated = false;
+    public bool IsBlockRunning = false;
+    public bool IsResponseMade = false;
+    public bool IsFileSaved = false;
 
-    public int CurrentBlock;
-    public int CurrentTrial;
+    public int CurrentBlock = 0;
+    public int CurrentTrial = 0;
 
 
 
     [Space]
     [Header("Action")]
-    public bool tryEyeCalibration;
+    public bool TryEyeCalibration;
+    public bool ResetTrackerPosition;
 
 
     // Start is called before the first frame update
@@ -45,10 +45,7 @@ public class InfoInspector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Debug.Log(gender);
-        }
+        
     }
 
     public enum Condition

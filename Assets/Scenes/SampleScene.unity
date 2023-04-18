@@ -133,6 +133,10 @@ GameObject:
   m_Component:
   - component: {fileID: 31988854}
   - component: {fileID: 31988853}
+  - component: {fileID: 31988858}
+  - component: {fileID: 31988857}
+  - component: {fileID: 31988856}
+  - component: {fileID: 31988855}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -157,9 +161,19 @@ MonoBehaviour:
   age: 0
   gender: 0
   condition: 0
-  IsEyeTrackingNeeded: 1
+  IsEyeTrackingNeeded: 0
   NumberOfBlocks: 0
   NumberOfRepetitions: 0
+  IsEyeTrackingCalibrated: 0
+  IsInputFinished: 0
+  IsStimulusCreated: 0
+  IsBlockRunning: 0
+  IsResponseMade: 0
+  IsFileSaved: 0
+  CurrentBlock: 0
+  CurrentTrial: 0
+  TryEyeCalibration: 0
+  ResetTrackerPosition: 0
 --- !u!4 &31988854
 Transform:
   m_ObjectHideFlags: 0
@@ -175,6 +189,70 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &31988855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31988852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3330584b38da2c4c9d5d83683429745, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventLog: 
+  CurrEvent: 
+  PrevEvent: 
+--- !u!114 &31988856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31988852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4322ff35042f5c345ba253e2b0c5765d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &31988857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31988852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 806f1b64ecdc52e4fbbf934fd6ff5948, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberOfRepetitions: 0
+  tactileReferenceStim: 
+  visualReferenceStim: 
+  blockTactileStim: 
+  blockVisualStim: 
+  tactileDisks: []
+  visualDisks: []
+  blockStimPair: 
+--- !u!114 &31988858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31988852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1199ad4f772dc364ea83f3b9f70909c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
+  initial: 
+  age: 0
+  gender: 
+  condition: 
 --- !u!1 &255679606
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,7 +315,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   VectGazeDirection: {x: 0, y: 0, z: 0}
   VectGazeOrigin: {x: 0, y: 0, z: 0}
-  tryEyeTrackingCalibrate: 0
 --- !u!1001 &261252197
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -723,10 +800,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 742788603}
-  - component: {fileID: 742788606}
-  - component: {fileID: 742788605}
-  - component: {fileID: 742788604}
-  - component: {fileID: 742788607}
   m_Layer: 0
   m_Name: Device
   m_TagString: Untagged
@@ -772,93 +845,6 @@ Transform:
   m_Father: {fileID: 2062647113}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &742788604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 742788602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4322ff35042f5c345ba253e2b0c5765d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blockCount: 0
-  maxBlockNumber: 0
-  onInputFinish:
-    m_PersistentCalls:
-      m_Calls: []
-  onStimulusCreated:
-    m_PersistentCalls:
-      m_Calls: []
-  onBlockStart:
-    m_PersistentCalls:
-      m_Calls: []
-  onBlockFinish:
-    m_PersistentCalls:
-      m_Calls: []
-  onTrialStart:
-    m_PersistentCalls:
-      m_Calls: []
-  onTrialFinish:
-    m_PersistentCalls:
-      m_Calls: []
-  isResponseMade: 0
-  IsBlockRunning: 0
-  IsEyeTrackingCalibrated: 0
---- !u!114 &742788605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 742788602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 806f1b64ecdc52e4fbbf934fd6ff5948, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  numberOfRepetitions: 0
-  tactileReferenceStim: 
-  visualReferenceStim: 
-  blockTactileStim: 
-  blockVisualStim: 
-  tactileDisks: []
-  visualDisks: []
-  blockStimPair: 
---- !u!114 &742788606
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 742788602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1199ad4f772dc364ea83f3b9f70909c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 1
-  initial: GW
-  age: 28
-  gender: M
-  condition: V=T
---- !u!114 &742788607
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 742788602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3330584b38da2c4c9d5d83683429745, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EventLog: 
-  CurrEvent: 
-  PrevEvent: 
 --- !u!1001 &793558729
 PrefabInstance:
   m_ObjectHideFlags: 0
