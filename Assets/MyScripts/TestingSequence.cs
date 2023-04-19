@@ -5,10 +5,6 @@ using UnityEngine.Events;
 
 public class TestingSequence : MonoBehaviour
 {
-
-
-
-
     DataRecorder dataRecorder;
     StimulusGeneration stimulusGeneration;
     InfoInspector infoInspector;

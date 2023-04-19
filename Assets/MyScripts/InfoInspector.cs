@@ -5,29 +5,28 @@ using UnityEngine;
 public class InfoInspector : MonoBehaviour
 {
     [Header("Session Info")]
-    public int id = 1;
-    public string initial = "test";
-    public int age = 25;
-    public Gender gender = new ();
-    public Condition condition = new ();
+    public int id;
+    public string initial;
+    public int age;
+    public Gender gender;
+    public Condition condition;
 
     [Space]
     [Header("Block Info")]
-    public int NumberOfBlocks = 1;
-    public int NumberOfRepetitions = 1;
+    public int NumberOfBlocks;
+    public int NumberOfRepetitions ;
 
     [Space]
     [Header("Status Monitor")]
-    public bool IsEyeTrackingCalibrated = false;
-    public bool IsInputFinished = false;
-    public bool IsStimulusCreated = false;
-    public bool IsBlockRunning = false;
-    public bool IsResponseMade = false;
-    public bool IsFileSaved = false;
+    public bool IsEyeTrackingCalibrated ;
+    public bool IsInputFinished ;
+    public bool IsStimulusCreated ;
+    public bool IsBlockRunning ;
+    public bool IsResponseMade ;
+    public bool IsFileSaved ;
 
-    public int CurrentBlock = 0;
-    public int CurrentTrial = 0;
-
+    public int CurrentBlock;
+    public int CurrentTrial;
 
 
     [Space]
@@ -39,7 +38,15 @@ public class InfoInspector : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        NumberOfBlocks = 1;
+        NumberOfRepetitions = 1;
 
+        IsEyeTrackingCalibrated = false;
+        IsInputFinished = false;
+        IsStimulusCreated = false;
+        IsBlockRunning = false;
+        IsResponseMade = false;
+        IsFileSaved = false;
     }
 
     // Update is called once per frame

@@ -11,29 +11,21 @@ public class DataRecorder : MonoBehaviour
     TestingSequence testingSequence;
     StimulusGeneration stimulusGeneration;
     FrameDataRecorder frameDataRecorder;
+    InfoInspector infoInspector;
     public List<TrialDataEntry> trialData;
     
    
-    //session Info
-    public int id;
-    public string initial;
-    public int age;
-    public string gender;
-    public string condition;
 
-    
-    private string _trialDataFileName;
 
     // Start is called before the first frame update
     void Start()
     {
-        /*trialData = new List<TrialDataEntry>();*/
-
         testingSequence = GetComponent<TestingSequence>();
         stimulusGeneration = GetComponent<StimulusGeneration>();
         frameDataRecorder = GetComponent<FrameDataRecorder>();
+        infoInspector = GetComponent<InfoInspector>();
 
-       
+
     }
 
     void OnEnable()
@@ -45,6 +37,7 @@ public class DataRecorder : MonoBehaviour
     void OnDisable()
     {
         EventManager.StopListening("StimulusCreated", CreateDataFile);
+        EventManager.StopListening("BlockFinished", CreateDataFile);
     }
 
     
@@ -58,7 +51,7 @@ public class DataRecorder : MonoBehaviour
 
         foreach(int stimPairIndex in stimulusGeneration.blockStimPair)
         {
-            TrialDataEntry trialDataEntry = new TrialDataEntry(id, initial, age, gender, condition);
+            TrialDataEntry trialDataEntry = new TrialDataEntry(infoInspector.id, infoInspector.initial, infoInspector.age, infoInspector.gender.ToString(), infoInspector.condition.ToString());
 
             trialDataEntry.TrialNumber = _index;
             trialDataEntry.StimPairIndex = stimPairIndex;
@@ -102,16 +95,21 @@ public class DataRecorder : MonoBehaviour
 
     void SaveToCSV(Dictionary<string, object> message)
     {
-        string _folderPath = @"C:/Users/gwan5836/OneDrive - The University of Sydney (Staff)/2023/vr texture integration/raw data/" + trialData[0].ID + "_" + trialData[0].Initial;
-        string _trialDataFileName = "trial_" + trialData[0].ID + "_" + trialData[0].Initial + "_" + trialData[0].Condition + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
+        string baseFolder = "C:\\Users\\gwan5836\\OneDrive - The University of Sydney (Staff)\\2023\\vr texture integration\\raw data\\";
 
-        if (!System.IO.Directory.Exists(_folderPath))
+        string subjectFolder =  trialData[0].ID + "_" + trialData[0].Initial;
+
+        string fileName = "trial_" + trialData[0].ID + "_" + trialData[0].Initial + "_" + trialData[0].Condition + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
+
+        string folderPath = Path.Combine(baseFolder, subjectFolder);
+
+        if (!System.IO.Directory.Exists(folderPath))
         {
-            System.IO.Directory.CreateDirectory(_folderPath);
+            System.IO.Directory.CreateDirectory(folderPath);
         }
 
 
-        string _filePath = _folderPath + '/' + _trialDataFileName;
+        string filePath = Path.Combine(folderPath, fileName);
 
         string headers = trialData[0].GetHeaders();
 
@@ -123,7 +121,7 @@ public class DataRecorder : MonoBehaviour
             dataFile.AppendLine(entry.GetValues());
         }
 
-        File.WriteAllText(_filePath, dataFile.ToString());
+        File.WriteAllText(filePath, dataFile.ToString());
         Debug.Log("Trial Data Saved");
     }
 
