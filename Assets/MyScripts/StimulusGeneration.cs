@@ -12,6 +12,7 @@ public class StimulusGeneration : MonoBehaviour
 {
     TestingSequence testingSequence;
     DataRecorder dataRecorder;
+    InfoInspector infoInspector;
 
     public int numberOfRepetitions;
 
@@ -49,6 +50,7 @@ public class StimulusGeneration : MonoBehaviour
     {
         dataRecorder = GetComponent<DataRecorder>();
         testingSequence = GetComponent<TestingSequence>();
+        infoInspector = GetComponent<InfoInspector>();
 
         numberOfRepetitions = 1;
 
@@ -70,32 +72,32 @@ public class StimulusGeneration : MonoBehaviour
     void CreateStimulus(Dictionary<string, object> message) 
     {
 
-        switch (dataRecorder.condition)
+        switch (infoInspector.condition)
         {
-            case "V":
+            case InfoInspector.Condition.Vison:
                 visualDisks = tactileDisks;
                 tactileStimPair = DummyStimPair();
                 visualStimPair = CreateCounterbalancedStimPair(visualDisks);
                 break;
 
-            case "T":
+            case InfoInspector.Condition.Touch:
                 tactileStimPair = CreateCounterbalancedStimPair(tactileDisks);
                 visualStimPair = DummyStimPair();
                 break;
 
-            case "V=T":
+            case InfoInspector.Condition.Combine:
                 visualDisks = tactileDisks;
                 tactileStimPair = CreateCounterbalancedStimPair(tactileDisks);
                 visualStimPair = CreateCounterbalancedStimPair(visualDisks);
                 break;
 
-            case "V<T": // in terms of disk number
+            case InfoInspector.Condition.VLowerFreqThanT: // in terms of disk number
                 visualDisks = new List<string>() { "B6", "B8", "B10", "B12", "B14" };
                 tactileStimPair = CreateCounterbalancedStimPair(tactileDisks);
                 visualStimPair = CreateCounterbalancedStimPair(visualDisks);
                 break;
 
-            case "V>T":
+            case InfoInspector.Condition.VHigherFreqThanT:
                 visualDisks = new List<string>() { "B8", "B10", "B12", "B14", "B16" };
                 tactileStimPair = CreateCounterbalancedStimPair(tactileDisks);
                 visualStimPair = CreateCounterbalancedStimPair(visualDisks);
@@ -110,6 +112,7 @@ public class StimulusGeneration : MonoBehaviour
 
 
         EventManager.TriggerEvent("StimulusCreated", null);
+        Debug.Log("Event: Stimulus Created");
     }
 
     List<List<string>> DummyStimPair()

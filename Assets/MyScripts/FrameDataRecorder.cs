@@ -72,7 +72,9 @@ public class FrameDataRecorder : MonoBehaviour
     {
         if (infoInspector.IsBlockRunning)
         {
-            FrameDataEntry frameDataEntry = new FrameDataEntry(dataRecorder.id, dataRecorder.initial, dataRecorder.age, dataRecorder.gender, dataRecorder.condition);
+            FrameDataEntry frameDataEntry = 
+            new FrameDataEntry(infoInspector.id, infoInspector.initial, infoInspector.age, 
+            infoInspector.gender.ToString(), infoInspector.condition.ToString());
 
             frameDataEntry.Frame = Time.frameCount;
             frameDataEntry.Time = Time.time;

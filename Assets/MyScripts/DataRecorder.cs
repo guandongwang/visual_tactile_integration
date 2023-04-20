@@ -37,7 +37,7 @@ public class DataRecorder : MonoBehaviour
     void OnDisable()
     {
         EventManager.StopListening("StimulusCreated", CreateDataFile);
-        EventManager.StopListening("BlockFinished", CreateDataFile);
+        EventManager.StopListening("BlockFinished", SaveToCSV);
     }
 
     
@@ -47,13 +47,13 @@ public class DataRecorder : MonoBehaviour
         trialData = new List<TrialDataEntry>();
 
         Debug.Log("blockStimPair count: " + stimulusGeneration.blockStimPair.Count);
-        int _index = 0;
+        int index = 0;
 
         foreach(int stimPairIndex in stimulusGeneration.blockStimPair)
         {
             TrialDataEntry trialDataEntry = new TrialDataEntry(infoInspector.id, infoInspector.initial, infoInspector.age, infoInspector.gender.ToString(), infoInspector.condition.ToString());
 
-            trialDataEntry.TrialNumber = _index;
+            trialDataEntry.TrialNumber = index;
             trialDataEntry.StimPairIndex = stimPairIndex;
             trialDataEntry.IsTestingStimAtPos2 = stimPairIndex < 5;
 
@@ -80,13 +80,11 @@ public class DataRecorder : MonoBehaviour
                 case 7:
                     trialDataEntry.TargetResponse = "LR";
                     break;
-           
-
             }
 
             
             trialData.Add(trialDataEntry);
-            _index++;
+            index++;
           
         }
 

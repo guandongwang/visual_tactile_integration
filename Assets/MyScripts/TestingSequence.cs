@@ -36,8 +36,14 @@ public class TestingSequence : MonoBehaviour
         
     }
 
+   void OnDisable()
+    {
+        EventManager.StopListening("DataFileReady", StartBlock);
+    }
+
     void StartBlock(Dictionary<string, object> message)
-    { 
+    {
+        Debug.Log("Event: DataFileReady");
         StartCoroutine(ExperimentBlock()); 
     }
 

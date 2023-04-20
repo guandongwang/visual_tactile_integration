@@ -93,6 +93,7 @@ public class EyeTracking : MonoBehaviour
         {
             infoInspector.IsEyeTrackingCalibrated = true;
             EventManager.TriggerEvent("EyeTrackingCalibrated", null);
+            Debug.Log("Event: Eye Tracking calibrated");
         }
         else
         { infoInspector.IsEyeTrackingCalibrated = false; }
