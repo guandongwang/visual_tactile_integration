@@ -157,13 +157,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  initial: 
+  initial: test
   age: 0
   gender: 0
   condition: 0
-  IsEyeTrackingNeeded: 0
   NumberOfBlocks: 0
   NumberOfRepetitions: 0
+  ReadyToStartBlock: 0
   IsEyeTrackingCalibrated: 0
   IsInputFinished: 0
   IsStimulusCreated: 0
@@ -172,6 +172,7 @@ MonoBehaviour:
   IsFileSaved: 0
   CurrentBlock: 0
   CurrentTrial: 0
+  CurrentEvent: 
   TryEyeCalibration: 0
   ResetTrackerPosition: 0
 --- !u!4 &31988854
@@ -202,8 +203,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EventLog: 
-  CurrEvent: 
-  PrevEvent: 
 --- !u!114 &31988856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,8 +230,6 @@ MonoBehaviour:
   numberOfRepetitions: 0
   tactileReferenceStim: 
   visualReferenceStim: 
-  blockTactileStim: 
-  blockVisualStim: 
   tactileDisks: []
   visualDisks: []
   blockStimPair: 
@@ -248,11 +245,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1199ad4f772dc364ea83f3b9f70909c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
-  initial: 
-  age: 0
-  gender: 
-  condition: 
 --- !u!1 &255679606
 GameObject:
   m_ObjectHideFlags: 0

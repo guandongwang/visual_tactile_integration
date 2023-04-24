@@ -19,10 +19,6 @@ public class StimulusGeneration : MonoBehaviour
     public string tactileReferenceStim;
     public string visualReferenceStim;
 
-    public List<int> blockTactileStim;
-    public List<int> blockVisualStim;
-   /* public List<int> BlockTestingStimPosition;*/
-
    
     public Dictionary<string, string> tactileDisksDic;
 
@@ -69,8 +65,9 @@ public class StimulusGeneration : MonoBehaviour
 
 
 
-    void CreateStimulus(Dictionary<string, object> message) 
+    void CreateStimulus() 
     {
+        infoInspector.CurrentEvent = "Create simulus";
 
         switch (infoInspector.condition)
         {
@@ -105,14 +102,11 @@ public class StimulusGeneration : MonoBehaviour
         }
 
         blockStimPair = ShuffleList(RepeatList(Enumerable.Range(0, 10).ToList(), numberOfRepetitions));
-        Debug.Log("Stimulus Created");
-        Debug.Log("tactileStimPair" + tactileStimPair.Count);
-        /*        foreach (int i in blockStimPair)
-                { Debug.Log(i); }*/
 
+        infoInspector.CurrentEvent = "Stimulus created";
+        EventManager.TriggerEvent("StimulusCreated");
+       
 
-        EventManager.TriggerEvent("StimulusCreated", null);
-        Debug.Log("Event: Stimulus Created");
     }
 
     List<List<string>> DummyStimPair()

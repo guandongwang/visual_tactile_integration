@@ -18,6 +18,7 @@ public class InfoInspector : MonoBehaviour
 
     [Space]
     [Header("Status Monitor")]
+    public bool ReadyToStartBlock;
     public bool IsEyeTrackingCalibrated ;
     public bool IsInputFinished ;
     public bool IsStimulusCreated ;
@@ -27,6 +28,8 @@ public class InfoInspector : MonoBehaviour
 
     public int CurrentBlock;
     public int CurrentTrial;
+
+    public string CurrentEvent;
 
 
     [Space]
@@ -41,18 +44,21 @@ public class InfoInspector : MonoBehaviour
         NumberOfBlocks = 1;
         NumberOfRepetitions = 1;
 
+
         IsEyeTrackingCalibrated = false;
         IsInputFinished = false;
         IsStimulusCreated = false;
         IsBlockRunning = false;
         IsResponseMade = false;
         IsFileSaved = false;
+
+        CurrentBlock = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+            ReadyToStartBlock =!IsBlockRunning && CurrentBlock <= NumberOfBlocks;
     }
 
     public enum Condition

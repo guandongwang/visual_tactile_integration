@@ -1,10 +1,12 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using System.Collections;
+using System.Collections.Generic;
 
 public class EventManager : MonoBehaviour
 {
-    private Dictionary<string, Action<Dictionary<string, object>>> eventDictionary;
+
+    private Dictionary<string, UnityEvent> eventDictionary;
 
     private static EventManager eventManager;
 
@@ -18,16 +20,14 @@ public class EventManager : MonoBehaviour
 
                 if (!eventManager)
                 {
-                    Debug.LogError("There needs to be one active EventManager script on a GameObject in your scene.");
+                    Debug.LogError("There needs to be one active EventManger script on a GameObject in your scene.");
                 }
                 else
                 {
                     eventManager.Init();
-
-                    //  Sets this to not be destroyed when reloading scene
-                    DontDestroyOnLoad(eventManager);
                 }
             }
+
             return eventManager;
         }
     }
@@ -36,43 +36,41 @@ public class EventManager : MonoBehaviour
     {
         if (eventDictionary == null)
         {
-            eventDictionary = new Dictionary<string, Action<Dictionary<string, object>>>();
+            eventDictionary = new Dictionary<string, UnityEvent>();
         }
     }
 
-    public static void StartListening(string eventName, Action<Dictionary<string, object>> listener)
+    public static void StartListening(string eventName, UnityAction listener)
     {
-        Action<Dictionary<string, object>> thisEvent;
-
+        UnityEvent thisEvent = null;
         if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
         {
-            thisEvent += listener;
-            instance.eventDictionary[eventName] = thisEvent;
+            thisEvent.AddListener(listener);
         }
         else
         {
-            thisEvent += listener;
+            thisEvent = new UnityEvent();
+            thisEvent.AddListener(listener);
             instance.eventDictionary.Add(eventName, thisEvent);
         }
     }
 
-    public static void StopListening(string eventName, Action<Dictionary<string, object>> listener)
+    public static void StopListening(string eventName, UnityAction listener)
     {
         if (eventManager == null) return;
-        Action<Dictionary<string, object>> thisEvent;
+        UnityEvent thisEvent = null;
         if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
         {
-            thisEvent -= listener;
-            instance.eventDictionary[eventName] = thisEvent;
+            thisEvent.RemoveListener(listener);
         }
     }
 
-    public static void TriggerEvent(string eventName, Dictionary<string, object> message)
+    public static void TriggerEvent(string eventName)
     {
-        Action<Dictionary<string, object>> thisEvent = null;
+        UnityEvent thisEvent = null;
         if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
         {
-            thisEvent.Invoke(message);
+            thisEvent.Invoke();
         }
     }
 }

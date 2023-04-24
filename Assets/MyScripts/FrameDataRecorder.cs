@@ -21,26 +21,21 @@ public class FrameDataRecorder : MonoBehaviour
 
     public List<FrameDataEntry> FrameData;
 
-    public string CurrEvent;
-    public string PrevEvent;
+    private string prevEvent;
 
 
     void OnEnable()
     {
-        Application.logMessageReceived += HandleLog;
+
         EventManager.StartListening("BlockFinished", SaveToCSV);
     }
 
     void OnDisable()
     {
-        Application.logMessageReceived -= HandleLog;
-        EventManager.StartListening("BlockFinished", SaveToCSV);
+        EventManager.StopListening("BlockFinished", SaveToCSV);
     }
 
-    void HandleLog(string logString, string stackTrace, LogType type)
-    {
-        CurrEvent = logString;
-    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -63,8 +58,8 @@ public class FrameDataRecorder : MonoBehaviour
 
 
         FrameData = new List<FrameDataEntry>();
-
-
+ 
+        prevEvent = "";
     }
 
     // Update is called once per frame
@@ -81,16 +76,15 @@ public class FrameDataRecorder : MonoBehaviour
 
             frameDataEntry.TouchWheelMessage = "";
 
-
-            /* _frameDataEntry.EventsLog = "";*/
-            if (CurrEvent != PrevEvent)
+            if (infoInspector.CurrentEvent == prevEvent)
             {
-                PrevEvent = CurrEvent;
-                frameDataEntry.EventsLog = CurrEvent;
+                
+                frameDataEntry.EventsLog = "";
             }
             else
             {
-                frameDataEntry.EventsLog = "";
+                prevEvent = infoInspector.CurrentEvent;
+                frameDataEntry.EventsLog = prevEvent;
             }
 
             //Head
@@ -107,6 +101,10 @@ public class FrameDataRecorder : MonoBehaviour
             frameDataEntry.TrackerPositionY = tracker.transform.position.y;
             frameDataEntry.TrackerPositionZ = tracker.transform.position.z;
 
+            frameDataEntry.TrackerRotationX = tracker.transform.eulerAngles.x;
+            frameDataEntry.TrackerRotationY = tracker.transform.eulerAngles.y;
+            frameDataEntry.TrackerRotationZ = tracker.transform.eulerAngles.z;
+
             frameDataEntry.VectGazeOriginX = eyeTracking.VectGazeOrigin.x;
             frameDataEntry.VectGazeOriginY = eyeTracking.VectGazeOrigin.y;
             frameDataEntry.VectGazeOriginZ = eyeTracking.VectGazeOrigin.z;
@@ -119,7 +117,7 @@ public class FrameDataRecorder : MonoBehaviour
         }
     }
 
-    void SaveToCSV(Dictionary<string, object> message)
+    void SaveToCSV()
     {
         string folderPath = @"C:/Users/gwan5836/OneDrive - The University of Sydney (Staff)/2023/vr texture integration/raw data/" + FrameData[0].ID + "_" + FrameData[0].Initial;
         string frameDataFileName = "frame_" + FrameData[0].ID + "_" + FrameData[0].Initial + "_" + FrameData[0].Condition + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";

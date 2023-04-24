@@ -12,6 +12,8 @@ public class DataRecorder : MonoBehaviour
     StimulusGeneration stimulusGeneration;
     FrameDataRecorder frameDataRecorder;
     InfoInspector infoInspector;
+
+
     public List<TrialDataEntry> trialData;
     
    
@@ -24,8 +26,6 @@ public class DataRecorder : MonoBehaviour
         stimulusGeneration = GetComponent<StimulusGeneration>();
         frameDataRecorder = GetComponent<FrameDataRecorder>();
         infoInspector = GetComponent<InfoInspector>();
-
-
     }
 
     void OnEnable()
@@ -41,13 +41,12 @@ public class DataRecorder : MonoBehaviour
     }
 
     
-    void CreateDataFile(Dictionary<string, object> message)
+    void CreateDataFile()
     {
-       
+        infoInspector.CurrentEvent = "Creat Trial Data File";
         trialData = new List<TrialDataEntry>();
 
-        Debug.Log("blockStimPair count: " + stimulusGeneration.blockStimPair.Count);
-        int index = 0;
+        int index = 1;
 
         foreach(int stimPairIndex in stimulusGeneration.blockStimPair)
         {
@@ -88,10 +87,12 @@ public class DataRecorder : MonoBehaviour
           
         }
 
-        EventManager.TriggerEvent("DataFileReady", null);
+        infoInspector.CurrentEvent = "Trial data filed created";
+        EventManager.TriggerEvent("DataFileReady");
+
     }
 
-    void SaveToCSV(Dictionary<string, object> message)
+    void SaveToCSV()
     {
         string baseFolder = "C:\\Users\\gwan5836\\OneDrive - The University of Sydney (Staff)\\2023\\vr texture integration\\raw data\\";
 

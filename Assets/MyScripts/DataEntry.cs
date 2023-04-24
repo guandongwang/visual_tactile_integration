@@ -28,14 +28,19 @@ public class DataEntry
 
     public string GetValues()
     {
-        return string.Join(", ", typeof(DataEntry).GetProperties().Select(p => p.GetValue(this)));
+        Type type = this.GetType();
+        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
+        string[] values = properties.Select(p => p.GetValue(this)?.ToString() ?? "").ToArray();
+        return string.Join(", ", values);
     }
 
     public string GetHeaders()
     {
+        Type type = this.GetType();
+        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
-        return string.Join(", ", typeof(DataEntry).GetProperties().Select(p => p.Name));
-
+        string[] headers = properties.Select(p => p.Name).ToArray();
+        return string.Join(", ", headers);
     }
 }

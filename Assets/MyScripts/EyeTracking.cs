@@ -14,20 +14,14 @@ public class EyeTracking : MonoBehaviour
     private static EyeData_v2 eyeData = new EyeData_v2();
     private bool eye_callback_registered = false;
 
-    TestingSequence testingSequnence;
-
     InfoInspector infoInspector;
-
-  
-
-
 
     void Start()
     {
 
         GameObject script = GameObject.Find("Scripts");
         infoInspector = script.GetComponent<InfoInspector>();
-        testingSequnence = script.GetComponent<TestingSequence>();
+       /* testingSequnence = script.GetComponent<TestingSequence>();*/
 
 
         if (!SRanipal_Eye_Framework.Instance.EnableEye)
@@ -88,15 +82,18 @@ public class EyeTracking : MonoBehaviour
 
     void EyeTrackingCalibration()
     {
-
-        if (SRanipal_Eye_v2.LaunchEyeCalibration())
+        if(SRanipal_Eye_v2.LaunchEyeCalibration())
         {
-            infoInspector.IsEyeTrackingCalibrated = true;
-            EventManager.TriggerEvent("EyeTrackingCalibrated", null);
-            Debug.Log("Event: Eye Tracking calibrated");
+        infoInspector.IsEyeTrackingCalibrated = true;
+        infoInspector.CurrentEvent = "Eye tracking calibration succeed";
         }
-        else
-        { infoInspector.IsEyeTrackingCalibrated = false; }
+         else
+        {
+            infoInspector.IsEyeTrackingCalibrated = false;
+            infoInspector.CurrentEvent = "Eye tracking calibration failed";
+        }
+   
+
 
     }
     private void Release()

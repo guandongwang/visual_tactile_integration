@@ -9,6 +9,7 @@ public class TestingSequence : MonoBehaviour
     StimulusGeneration stimulusGeneration;
     InfoInspector infoInspector;
 
+   
 
     // Start is called before the first frame update
     void Start()
@@ -17,63 +18,68 @@ public class TestingSequence : MonoBehaviour
         stimulusGeneration = GetComponent<StimulusGeneration>();
         infoInspector = GetComponent<InfoInspector>();
 
+
     }
 
+    void OnEnable()
+    {
+        EventManager.StartListening("DataFileReady", StartBlock);
+    }
+
+    void OnDisable()
+    {
+        EventManager.StopListening("DataFileReady", StartBlock);
+    }
     // Update is called once per frame
     void Update()
-    {       
+    {
+        
 
-        bool readyToCreateStimulus = infoInspector.IsEyeTrackingCalibrated
-            && !infoInspector.IsBlockRunning
-            && infoInspector.CurrentBlock < infoInspector.NumberOfBlocks;
-
-        if (Input.GetKeyDown(KeyCode.Space) & readyToCreateStimulus)
+        if (Input.GetKeyDown(KeyCode.Space) & infoInspector.ReadyToStartBlock)
         {
-            EventManager.TriggerEvent("InputFinish", null);
-            EventManager.StartListening("DataFileReady", StartBlock);
+            infoInspector.CurrentEvent = "Input Finished";
+            EventManager.TriggerEvent("InputFinish");
         }
 
         
     }
 
-   void OnDisable()
+    void StartBlock()
     {
-        EventManager.StopListening("DataFileReady", StartBlock);
-    }
-
-    void StartBlock(Dictionary<string, object> message)
-    {
-        Debug.Log("Event: DataFileReady");
+        Debug.Log("Start Coroutine");
         StartCoroutine(ExperimentBlock()); 
     }
 
     IEnumerator ExperimentBlock()
     {
+        
+        infoInspector.CurrentEvent = "Block " + (infoInspector.CurrentBlock) + " start";
         infoInspector.IsBlockRunning = true;
-
-        Debug.Log("Block " + (infoInspector.CurrentBlock + 1) + " Start");
         
 
         foreach (TrialDataEntry entry in dataRecorder.trialData)
         {
-            infoInspector.CurrentTrial = entry.TrialNumber + 1;
+           
+            infoInspector.CurrentTrial = entry.TrialNumber;
 
             infoInspector.IsResponseMade = false;
             //Trial Start
             entry.TrialStartTime = Time.time;
-            Debug.Log("Trial " + entry.TrialNumber + " Start");
+            infoInspector.CurrentEvent = "Trial " + (entry.TrialNumber + 1) + " start";
+        
 
             //S1 Onset
             entry.S1Onset = Time.time;
-            Debug.Log("S1 Touch: " + entry.S1Touch + ", S1 Vision: " + entry.S1Vision);
+
+
             //S1 Offset
             entry.S1Offset = Time.time;
 
 
             //Trial Start
             entry.S2Onset = Time.time;
-            Debug.Log("S2 Touch: " + entry.S2Touch + ", S2 Vision: " + entry.S2Vision);
-       
+
+
 
             //S2 Offset
             entry.S2Offset = Time.time;
@@ -113,12 +119,11 @@ public class TestingSequence : MonoBehaviour
             //Trial Duration
             entry.TrialDuration = entry.TrialEndTime - entry.TrialStartTime;
 
-            Debug.Log(entry.GetHeaders());
-            Debug.Log(entry.GetValues());
+           
         }
         infoInspector.CurrentBlock++;
         infoInspector.IsBlockRunning = false;
-        EventManager.TriggerEvent("BlockFinished", null);
+        EventManager.TriggerEvent("BlockFinished");
     }
 
 }
