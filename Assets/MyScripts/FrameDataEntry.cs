@@ -39,6 +39,9 @@ public class FrameDataEntry : DataEntry
     public float VectGazeDirectionY { get; set; }
     public float VectGazeDirectionZ { get; set; }
 
+    public float EyeOpennessLeft { get; set; }
+    public float EyeOpennessRight { get; set; }
+
     public FrameDataEntry(int id, String initial, int age, string gender, string condition)
         : base(id, initial, age, gender, condition) { }
     public FrameDataEntry(DataEntry dataEntry)

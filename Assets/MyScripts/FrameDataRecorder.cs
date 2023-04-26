@@ -113,6 +113,8 @@ public class FrameDataRecorder : MonoBehaviour
             frameDataEntry.VectGazeDirectionY = eyeTracking.VectGazeDirection.y;
             frameDataEntry.VectGazeDirectionZ = eyeTracking.VectGazeDirection.z;
 
+            frameDataEntry.EyeOpennessLeft = eyeTracking.EyeOpennessLeft;
+            frameDataEntry.EyeOpennessRight= eyeTracking.EyeOpennessRight;
             FrameData.Add(frameDataEntry);
         }
     }

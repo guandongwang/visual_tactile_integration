@@ -80,7 +80,6 @@ public class TestingSequence : MonoBehaviour
             entry.S2Onset = Time.time;
 
 
-
             //S2 Offset
             entry.S2Offset = Time.time;
 

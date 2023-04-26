@@ -8,7 +8,10 @@ using UnityEngine.Assertions;
 public class EyeTracking : MonoBehaviour
 {
     public Vector3 VectGazeDirection,
-                   VectGazeOrigin;  
+                   VectGazeOrigin;
+
+    public float EyeOpennessLeft;
+    public float EyeOpennessRight;
 
     private LineRenderer GazeRayRenderer;
     private static EyeData_v2 eyeData = new EyeData_v2();
@@ -76,8 +79,10 @@ public class EyeTracking : MonoBehaviour
 
             VectGazeDirection = eyeData.verbose_data.combined.eye_data.gaze_direction_normalized;
             VectGazeOrigin = eyeData.verbose_data.combined.eye_data.gaze_origin_mm;
-           /* Debug.Log("Origin: " + GazeOriginCombinedLocal + ", Direction: " + GazeDirectionCombinedLocal);*/
-        }
+            EyeOpennessLeft = eyeData.verbose_data.left.eye_openness;
+            EyeOpennessRight = eyeData.verbose_data.right.eye_openness;
+        /* Debug.Log("Origin: " + GazeOriginCombinedLocal + ", Direction: " + GazeDirectionCombinedLocal);*/
+    }
    
 
     void EyeTrackingCalibration()
