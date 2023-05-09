@@ -19,6 +19,7 @@ public class InfoInspector : MonoBehaviour
     [Space]
     [Header("Status Monitor")]
     public bool ReadyToStartBlock;
+    public bool IsTouchWheelReady;
     public bool IsEyeTrackingCalibrated ;
     public bool IsInputFinished ;
     public bool IsStimulusCreated ;
@@ -30,22 +31,22 @@ public class InfoInspector : MonoBehaviour
     public int CurrentTrial;
 
     public string CurrentEvent;
+    public string TouchWheelMessage;
 
 
     [Space]
     [Header("Action")]
     public bool TryEyeCalibration;
-    public bool ResetTrackerPosition;
+    public bool IsTrackerEnabled;
+  
 
 
     // Start is called before the first frame update
     void Start()
     {
-        NumberOfBlocks = 1;
-        NumberOfRepetitions = 1;
-
 
         IsEyeTrackingCalibrated = false;
+        IsTouchWheelReady = false;
         IsInputFinished = false;
         IsStimulusCreated = false;
         IsBlockRunning = false;
@@ -53,17 +54,24 @@ public class InfoInspector : MonoBehaviour
         IsFileSaved = false;
 
         CurrentBlock = 1;
+
+        IsTrackerEnabled = true;
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-            ReadyToStartBlock =!IsBlockRunning && CurrentBlock <= NumberOfBlocks;
+
+     ReadyToStartBlock = !IsBlockRunning && CurrentBlock <= NumberOfBlocks;
+   
     }
+
 
     public enum Condition
     {
-        Vison,
+        Vision,
         Touch,
         Combine,
         VLowerFreqThanT,

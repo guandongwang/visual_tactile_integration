@@ -22,17 +22,18 @@ public class FrameDataRecorder : MonoBehaviour
     public List<FrameDataEntry> FrameData;
 
     private string prevEvent;
+    private string prevMessage;
 
 
     void OnEnable()
     {
 
-        EventManager.StartListening("BlockFinished", SaveToCSV);
+        EventManager.StartListening("OnBlockFinished", SaveToCSV);
     }
 
     void OnDisable()
     {
-        EventManager.StopListening("BlockFinished", SaveToCSV);
+        EventManager.StopListening("OnBlockFinished", SaveToCSV);
     }
 
 
@@ -60,6 +61,7 @@ public class FrameDataRecorder : MonoBehaviour
         FrameData = new List<FrameDataEntry>();
  
         prevEvent = "";
+        prevMessage = "";
     }
 
     // Update is called once per frame
@@ -73,12 +75,20 @@ public class FrameDataRecorder : MonoBehaviour
 
             frameDataEntry.Frame = Time.frameCount;
             frameDataEntry.Time = Time.time;
+            frameDataEntry.TrialNumber = infoInspector.CurrentTrial;
 
-            frameDataEntry.TouchWheelMessage = "";
+            if (infoInspector.TouchWheelMessage == prevMessage)
+            {
+                frameDataEntry.TouchWheelMessage = "";
+            }
+            else
+            {
+                prevMessage = infoInspector.TouchWheelMessage;
+                frameDataEntry.TouchWheelMessage = prevMessage;
+            }
 
             if (infoInspector.CurrentEvent == prevEvent)
             {
-                
                 frameDataEntry.EventsLog = "";
             }
             else

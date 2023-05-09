@@ -12,8 +12,10 @@ public class TrialDataEntry : DataEntry
     public int StimPairIndex { get; set; }
     public bool IsTestingStimAtPos2 { get; set; }
     public string S1Vision { get; set; }
+    public int S1VisionOri { get; set; }
     public string S1Touch { get; set; }
     public string S2Vision { get; set; }
+    public int S2VisionOri { get; set; }
     public string S2Touch { get; set; }
 
         

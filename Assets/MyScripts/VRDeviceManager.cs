@@ -4,13 +4,18 @@ using UnityEngine;
 using System;
 using Valve.VR;
 using HTC.UnityPlugin.Vive;
+using Random = UnityEngine.Random;
 
-public class VRDeviceManager : MonoBehaviour
+
+public class VrDeviceManager : MonoBehaviour
 {
+    InfoInspector infoInspector;
 
-    public List<GameObject> disks;
-    public GameObject device;
-    public GameObject tracker;
+ 
+    GameObject device;
+    GameObject tracker;
+
+    bool currTrackerStatus;
 
     /*public SteamVR_Input_Sources tracker; */
 
@@ -18,45 +23,45 @@ public class VRDeviceManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-        for (int i = 1; i <= 21; i++)
-        {
-            GameObject obj = GameObject.Find("B" + i);
-            if (obj != null)
-            {
-                disks.Add(obj);
-            }
-        }
-
-
+        infoInspector = GameObject.Find("Scripts").GetComponent<InfoInspector>();
+        currTrackerStatus = true;
+    /*    tracker = GameObject.Find("Tracker1");
+        device = GameObject.Find("device");*/
     }
+
+   
 
     // Update is called once per frame
     void Update()
     {
+/*        device.transform.position = tracker.transform.position;
+        device.transform.rotation = tracker.transform.rotation;*/
 
-    }
-
-    void DisableTrackerMovement()
-    { 
-        tracker.GetComponent<VivePoseTracker>().enabled = false; 
-    }
-
-    void EnableTrackerMovement()
-    {
-        tracker.GetComponent<VivePoseTracker>().enabled = true;
-    }
-
-    public void PresentDisk(string diskName)
-    {
-            //0.125m is the distance from the middle of the device to the top surface
-            GameObject.Find(diskName).transform.localPosition = new Vector3(0f, -0.045f, 0.125f);
+        if (infoInspector.IsTrackerEnabled != currTrackerStatus)
+        {
+            currTrackerStatus = infoInspector.IsTrackerEnabled;
+            GameObject.Find("Tracker1").GetComponent<VivePoseTracker>().enabled = currTrackerStatus;
+           
+        }
    
+    
+
+
+
+    }
+
+
+
+    public void PresentDisk(string diskName, int angle)
+    {
+
+        GameObject.Find(diskName).GetComponent<Renderer>().enabled = true;
     }
 
     public void HideDisk(string diskName)
     {
-         GameObject.Find(diskName).transform.localPosition = new Vector3(0f, -0.045f, 0.125f);
+        GameObject.Find(diskName).GetComponent<Renderer>().enabled = false;
+   
     }
 
 

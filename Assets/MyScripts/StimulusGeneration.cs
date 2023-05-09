@@ -14,8 +14,6 @@ public class StimulusGeneration : MonoBehaviour
     DataRecorder dataRecorder;
     InfoInspector infoInspector;
 
-    public int numberOfRepetitions;
-
     public string tactileReferenceStim;
     public string visualReferenceStim;
 
@@ -33,12 +31,12 @@ public class StimulusGeneration : MonoBehaviour
 
     void OnEnable()
     {
-        EventManager.StartListening("InputFinish", CreateStimulus);
+        EventManager.StartListening("OnSessionStart", CreateStimulus);
     }
 
     void OnDisable()
     {
-        EventManager.StopListening("InputFinish", CreateStimulus);
+        EventManager.StopListening("OnSessionStart", CreateStimulus);
     }
 
     // Start is called before the first frame update
@@ -48,19 +46,19 @@ public class StimulusGeneration : MonoBehaviour
         testingSequence = GetComponent<TestingSequence>();
         infoInspector = GetComponent<InfoInspector>();
 
-        numberOfRepetitions = 1;
 
-        tactileDisks = new List<string>() { "B7", "B9", "B11", "B13", "B15" };
+        tactileDisks = new List<string>() { "B5", "B8", "B11", "B14", "B17"};
 
         
         tactileDisksDic = new Dictionary<string, string>(5);
-        tactileDisksDic.Add(tactileDisks[0], "A");
-        tactileDisksDic.Add(tactileDisks[1], "B");
-        tactileDisksDic.Add(tactileDisks[2], "C");
-        tactileDisksDic.Add(tactileDisks[3], "D");
-        tactileDisksDic.Add(tactileDisks[4], "E");
+        tactileDisksDic.Add(tactileDisks[0], "a");
+        tactileDisksDic.Add(tactileDisks[1], "b");
+        tactileDisksDic.Add(tactileDisks[2], "c");
+        tactileDisksDic.Add(tactileDisks[3], "d");
+        tactileDisksDic.Add(tactileDisks[4], "e");
+        tactileDisksDic.Add("dummy", "dummy");
 
-        
+
     }
 
 
@@ -71,7 +69,7 @@ public class StimulusGeneration : MonoBehaviour
 
         switch (infoInspector.condition)
         {
-            case InfoInspector.Condition.Vison:
+            case InfoInspector.Condition.Vision:
                 visualDisks = tactileDisks;
                 tactileStimPair = DummyStimPair();
                 visualStimPair = CreateCounterbalancedStimPair(visualDisks);
@@ -101,10 +99,10 @@ public class StimulusGeneration : MonoBehaviour
                 break;
         }
 
-        blockStimPair = ShuffleList(RepeatList(Enumerable.Range(0, 10).ToList(), numberOfRepetitions));
+        blockStimPair = ShuffleList(RepeatList(Enumerable.Range(0, 10).ToList(), infoInspector.NumberOfRepetitions));
 
         infoInspector.CurrentEvent = "Stimulus created";
-        EventManager.TriggerEvent("StimulusCreated");
+        EventManager.TriggerEvent("OnStimulusCreated");
        
 
     }

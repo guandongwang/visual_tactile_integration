@@ -30,13 +30,13 @@ public class DataRecorder : MonoBehaviour
 
     void OnEnable()
     {
-        EventManager.StartListening("StimulusCreated", CreateDataFile);
+        EventManager.StartListening("OnStimulusCreated", CreateDataFile);
         EventManager.StartListening("BlockFinished", SaveToCSV);
     }
 
     void OnDisable()
     {
-        EventManager.StopListening("StimulusCreated", CreateDataFile);
+        EventManager.StopListening("OnStimulusCreated", CreateDataFile);
         EventManager.StopListening("BlockFinished", SaveToCSV);
     }
 
@@ -58,8 +58,10 @@ public class DataRecorder : MonoBehaviour
 
             trialDataEntry.S1Touch = stimulusGeneration.tactileStimPair[stimPairIndex][0];
             trialDataEntry.S1Vision = stimulusGeneration.visualStimPair[stimPairIndex][0];
+            trialDataEntry.S1VisionOri = Random.Range(0,360);
             trialDataEntry.S2Touch = stimulusGeneration.tactileStimPair[stimPairIndex][1];
             trialDataEntry.S2Vision = stimulusGeneration.visualStimPair[stimPairIndex][1];
+            trialDataEntry.S2VisionOri = Random.Range(0,360);
 
             switch (stimPairIndex)
             {
@@ -67,17 +69,17 @@ public class DataRecorder : MonoBehaviour
                 case 1:
                 case 8:
                 case 9:
-                    trialDataEntry.TargetResponse = "L";
+                    trialDataEntry.TargetResponse = "D";
                     break;
                 case 3:
                 case 4:
                 case 5:
                 case 6:
-                    trialDataEntry.TargetResponse = "R";
+                    trialDataEntry.TargetResponse = "U";
                     break;
                 case 2:
                 case 7:
-                    trialDataEntry.TargetResponse = "LR";
+                    trialDataEntry.TargetResponse = "DU";
                     break;
             }
 
@@ -87,8 +89,8 @@ public class DataRecorder : MonoBehaviour
           
         }
 
-        infoInspector.CurrentEvent = "Trial data filed created";
-        EventManager.TriggerEvent("DataFileReady");
+        infoInspector.CurrentEvent = "OnTrialDataFileReady";
+        EventManager.TriggerEvent("OnTrialDataFileReady");
 
     }
 

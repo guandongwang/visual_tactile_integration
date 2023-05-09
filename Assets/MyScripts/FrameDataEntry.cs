@@ -10,6 +10,7 @@ public class FrameDataEntry : DataEntry
 {
     public int Frame { get; set; }
     public float Time { get; set; }
+    public int TrialNumber { get; set; }
 
     //Events
     public string TouchWheelMessage { get; set; }
