@@ -7,7 +7,7 @@ using System.Linq;
 
 public class RandomizedStimulusGeneration : MonoBehaviour
 {
-    List<List<Stimulus>> SessionStimulusCollection;
+    public List<List<Stimulus>> SessionStimulusCollection;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,7 +17,19 @@ public class RandomizedStimulusGeneration : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            SessionStimulusCollection = CreateSessionStimulus();
+            foreach (List<Stimulus> blockStim in SessionStimulusCollection)
+            {
+                foreach (Stimulus stim in blockStim)
+                {
+                    Debug.Log(stim.GetValues());
+                }
+            }
+
+
+        }
     }
 
     List<List<Stimulus>> CreateSessionStimulus()
@@ -56,7 +68,7 @@ public class RandomizedStimulusGeneration : MonoBehaviour
             stimulusCollection.Add(stimulus);
         }
 
-        //Touch
+        //Touch ref/test
         for (int i = 0; i < 5; i++)
         {
             Stimulus stimulus = new Stimulus();
@@ -70,6 +82,7 @@ public class RandomizedStimulusGeneration : MonoBehaviour
             stimulusCollection.Add(stimulus);
         }
 
+        //Touch test/ref
         for (int i = 0; i < 5; i++)
         {
             Stimulus stimulus = new Stimulus();
@@ -86,7 +99,7 @@ public class RandomizedStimulusGeneration : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             Stimulus stimulus = new Stimulus();
-            stimulus.Condition = "Touch";
+            stimulus.Condition = "Combine";
             stimulus.StimPairNumber = i + 1;
             stimulus.S1Vision = referenceDisk;
             stimulus.S2Vision = visualDisk[i];
@@ -99,7 +112,7 @@ public class RandomizedStimulusGeneration : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             Stimulus stimulus = new Stimulus();
-            stimulus.Condition = "Touch";
+            stimulus.Condition = "Combine";
             stimulus.StimPairNumber = i + 6;
             stimulus.S1Vision = visualDisk[i];
             stimulus.S2Vision = referenceDisk;
@@ -160,9 +173,10 @@ public class RandomizedStimulusGeneration : MonoBehaviour
             stimulusCollection.Add(stimulus);
         }
 
-        //repeat 50 stim 10 times, total 500 trials
-        List<Stimulus> randomizedStim = ShuffleList(RepeatList(stimulusCollection, 10));
-
+        /*  //repeat 50 stim 10 times, total 500 trials
+          List<Stimulus> randomizedStim = ShuffleList(RepeatList(stimulusCollection, 10));
+  */
+        List<Stimulus> randomizedStim = RepeatList(stimulusCollection, 10);
         List<List<Stimulus>> SessionStimulusCollection = new List<List<Stimulus>>();
 
         int startIndex = 0;
