@@ -26,18 +26,20 @@ public class PhysicalDeviceManager : MonoBehaviour
 
         scripts = GameObject.Find("Scripts");
         infoInspector = scripts.GetComponent<InfoInspector>();
-
+        StartSerialComm();
     }
     void OnEnable()
     {
-        EventManager.StartListening("OnBlockStart", StartSerialComm);
-        EventManager.StartListening("OnBlockFinished", StopSerialComm);
+        
+      /*  EventManager.StartListening("OnBlockStart", StartSerialComm);
+        EventManager.StartListening("OnBlockFinished", StopSerialComm);*/
     }
 
     void OnDisable()
     {
-        EventManager.StartListening("OnBlockStart", StartSerialComm);
-        EventManager.StopListening("OnBlockFinished", StopSerialComm);
+        StopSerialComm();
+        /*EventManager.StartListening("OnBlockStart", StartSerialComm);
+        EventManager.StopListening("OnBlockFinished", StopSerialComm);*/
     }
 
 
@@ -48,7 +50,7 @@ public class PhysicalDeviceManager : MonoBehaviour
 
     void StartSerialComm()
     {
-        if (infoInspector.condition == InfoInspector.Condition.Vision)
+        if (infoInspector.condition != InfoInspector.Condition.Vision)
         {
             running = true;
             serialPort = new SerialPort("COM3", 9600);
@@ -106,9 +108,10 @@ public class PhysicalDeviceManager : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        running = false;
+        StopSerialComm();
+/*        running = false;
         readThread.Abort();
-        serialPort.Close();
+        serialPort.Close();*/
     }
     
 }

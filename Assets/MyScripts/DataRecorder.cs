@@ -58,10 +58,10 @@ public class DataRecorder : MonoBehaviour
 
             trialDataEntry.S1Touch = stimulusGeneration.tactileStimPair[stimPairIndex][0];
             trialDataEntry.S1Vision = stimulusGeneration.visualStimPair[stimPairIndex][0];
-            trialDataEntry.S1VisionOri = Random.Range(0,360);
+            trialDataEntry.S1VisionOri = 0;
             trialDataEntry.S2Touch = stimulusGeneration.tactileStimPair[stimPairIndex][1];
             trialDataEntry.S2Vision = stimulusGeneration.visualStimPair[stimPairIndex][1];
-            trialDataEntry.S2VisionOri = Random.Range(0,360);
+            trialDataEntry.S2VisionOri = 0;
 
             switch (stimPairIndex)
             {

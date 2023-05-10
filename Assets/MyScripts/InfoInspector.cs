@@ -38,9 +38,9 @@ public class InfoInspector : MonoBehaviour
     [Header("Action")]
     public bool TryEyeCalibration;
     public bool IsTrackerEnabled;
-  
 
 
+    private Condition currentCondition;
     // Start is called before the first frame update
     void Start()
     {
@@ -57,7 +57,7 @@ public class InfoInspector : MonoBehaviour
 
         IsTrackerEnabled = true;
 
-
+        currentCondition = condition;
     }
 
     // Update is called once per frame
@@ -65,6 +65,12 @@ public class InfoInspector : MonoBehaviour
     {
 
      ReadyToStartBlock = !IsBlockRunning && CurrentBlock <= NumberOfBlocks;
+     
+        if (condition != currentCondition)
+        {
+            currentCondition = condition;
+            CurrentBlock = 1;
+        }
    
     }
 

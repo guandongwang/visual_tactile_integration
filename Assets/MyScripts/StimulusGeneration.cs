@@ -47,7 +47,7 @@ public class StimulusGeneration : MonoBehaviour
         infoInspector = GetComponent<InfoInspector>();
 
 
-        tactileDisks = new List<string>() { "B5", "B8", "B11", "B14", "B17"};
+        tactileDisks = new List<string>() { "B3", "B7", "B11", "B15", "B19"};
 
         
         tactileDisksDic = new Dictionary<string, string>(5);
@@ -57,7 +57,6 @@ public class StimulusGeneration : MonoBehaviour
         tactileDisksDic.Add(tactileDisks[3], "d");
         tactileDisksDic.Add(tactileDisks[4], "e");
         tactileDisksDic.Add("dummy", "dummy");
-
 
     }
 
@@ -87,13 +86,13 @@ public class StimulusGeneration : MonoBehaviour
                 break;
 
             case InfoInspector.Condition.VLowerFreqThanT: // in terms of disk number
-                visualDisks = new List<string>() { "B6", "B8", "B10", "B12", "B14" };
+                visualDisks = new List<string>() { "B1", "B5", "B9", "B13", "B17" };
                 tactileStimPair = CreateCounterbalancedStimPair(tactileDisks);
                 visualStimPair = CreateCounterbalancedStimPair(visualDisks);
                 break;
 
             case InfoInspector.Condition.VHigherFreqThanT:
-                visualDisks = new List<string>() { "B8", "B10", "B12", "B14", "B16" };
+                visualDisks = new List<string>() { "B5", "B9", "B13", "B17", "B21" };
                 tactileStimPair = CreateCounterbalancedStimPair(tactileDisks);
                 visualStimPair = CreateCounterbalancedStimPair(visualDisks);
                 break;
@@ -124,17 +123,17 @@ public class StimulusGeneration : MonoBehaviour
         //couterbalanced stimulus for touch
         List<List<string>> stimPair = new List<List<string>>(10);
 
-        stimPair.Add(new List<string> { diskList[2], diskList[0] });
-        stimPair.Add(new List<string> { diskList[2], diskList[1] });
-        stimPair.Add(new List<string> { diskList[2], diskList[2] });
-        stimPair.Add(new List<string> { diskList[2], diskList[3] });
-        stimPair.Add(new List<string> { diskList[2], diskList[4] });
+        stimPair.Add(new List<string> { "B11", diskList[0] });
+        stimPair.Add(new List<string> { "B11", diskList[1] });
+        stimPair.Add(new List<string> { "B11", diskList[2] });
+        stimPair.Add(new List<string> { "B11", diskList[3] });
+        stimPair.Add(new List<string> { "B11", diskList[4] });
 
-        stimPair.Add(new List<string> { diskList[0], diskList[2] });
-        stimPair.Add(new List<string> { diskList[1], diskList[2] });
-        stimPair.Add(new List<string> { diskList[2], diskList[2] });
-        stimPair.Add(new List<string> { diskList[3], diskList[2] });
-        stimPair.Add(new List<string> { diskList[4], diskList[2] });
+        stimPair.Add(new List<string> { diskList[0], "B11" });
+        stimPair.Add(new List<string> { diskList[1], "B11" });
+        stimPair.Add(new List<string> { diskList[2], "B11" });
+        stimPair.Add(new List<string> { diskList[3], "B11" });
+        stimPair.Add(new List<string> { diskList[4], "B11" });
        
         return stimPair;
     }

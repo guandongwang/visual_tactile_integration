@@ -52,7 +52,7 @@ public class VrDeviceManager : MonoBehaviour
 
 
 
-    public void PresentDisk(string diskName, int angle)
+    public void PresentDisk(string diskName)
     {
 
         GameObject.Find(diskName).GetComponent<Renderer>().enabled = true;

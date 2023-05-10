@@ -104,12 +104,11 @@ public class TestingSequence : MonoBehaviour
             infoInspector.IsResponseMade = false;
             //Trial Start
             entry.TrialStartTime = Time.time;
-            infoInspector.CurrentEvent = "Trial " + (entry.TrialNumber + 1) + " start";
-
+            infoInspector.CurrentEvent = "Trial " + (entry.TrialNumber) + " start";
 
             //S1 Onset
             entry.S1Onset = Time.time;
-            vrDeviceManager.PresentDisk(entry.S1Vision, entry.S1VisionOri);
+            vrDeviceManager.PresentDisk(entry.S1Vision);
             yield return new WaitForSeconds(2f);
 
             //S1 Offset
@@ -117,12 +116,14 @@ public class TestingSequence : MonoBehaviour
 
 
             vrDeviceManager.HideDisk(entry.S1Vision);
-            yield return new WaitForSeconds(.5f);
+
+            //compensate for other condition
+            yield return new WaitForSeconds(2.5f);
 
 
-            //Trial Start
+            //s2
             entry.S2Onset = Time.time;
-            vrDeviceManager.PresentDisk(entry.S2Vision, entry.S2VisionOri);
+            vrDeviceManager.PresentDisk(entry.S2Vision);
             yield return new WaitForSeconds(2f);
 
             //S2 Offset
@@ -131,7 +132,7 @@ public class TestingSequence : MonoBehaviour
 
             //Response Cued
             entry.ResponseCued = Time.time;
-            vrDeviceManager.PresentDisk("cue", 0);
+            vrDeviceManager.PresentDisk("cue");
 
             while (!infoInspector.IsResponseMade)
             {
@@ -158,7 +159,7 @@ public class TestingSequence : MonoBehaviour
             //Response Time
             entry.ResponseTime = entry.ResponseMade - entry.ResponseCued;
 
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(1f);
 
 
             //Trial End
@@ -190,7 +191,7 @@ public class TestingSequence : MonoBehaviour
             infoInspector.IsResponseMade = false;
             //Trial Start
             entry.TrialStartTime = Time.time;
-            infoInspector.CurrentEvent = "Trial " + (entry.TrialNumber + 1) + " start";
+            infoInspector.CurrentEvent = "Trial " + (entry.TrialNumber) + " start";
         
 
             //S1 Onset
@@ -202,7 +203,7 @@ public class TestingSequence : MonoBehaviour
             physicalDeviceManager.WriteSerialData("p");
             while (!infoInspector.IsTouchWheelReady)
             { yield return new WaitForSeconds(0.1f); }
-            vrDeviceManager.PresentDisk(entry.S1Vision, entry.S1VisionOri);
+            vrDeviceManager.PresentDisk(entry.S1Vision);
             yield return new WaitForSeconds(2f);
 
             //S1 Offset
@@ -212,19 +213,30 @@ public class TestingSequence : MonoBehaviour
             while (!infoInspector.IsTouchWheelReady)
             { yield return new WaitForSeconds(0.1f); }
             vrDeviceManager.HideDisk(entry.S1Vision);
-            yield return new WaitForSeconds(.5f);
+            /*yield return new WaitForSeconds(.5f);*/
 
 
-            //Trial Start
+            //S2
             entry.S2Onset = Time.time;
 
             physicalDeviceManager.WriteSerialData(stimulusGeneration.tactileDisksDic[entry.S2Touch]);
             while (!infoInspector.IsTouchWheelReady)
             { yield return new WaitForSeconds(0.1f); }
+
+
+/*            //ensure 3s gap
+            float remainGap = (Time.time - entry.S2Onset);
+            if (remainGap > 0)
+            { yield return new WaitForSeconds(remainGap);
+            }*/
+
             physicalDeviceManager.WriteSerialData("p");
-            while (!infoInspector.IsTouchWheelReady)
+            while (!infoInspector.IsTouchWheelReady )
             { yield return new WaitForSeconds(0.1f); }
-            vrDeviceManager.PresentDisk(entry.S2Vision, entry.S2VisionOri);
+
+
+
+            vrDeviceManager.PresentDisk(entry.S2Vision);
             yield return new WaitForSeconds(2f);
 
             //S2 Offset
@@ -237,7 +249,7 @@ public class TestingSequence : MonoBehaviour
 
             //Response Cued
             entry.ResponseCued = Time.time;
-            vrDeviceManager.PresentDisk("cue", 0);
+            vrDeviceManager.PresentDisk("cue");
 
             while (!infoInspector.IsResponseMade)
             {
@@ -264,7 +276,7 @@ public class TestingSequence : MonoBehaviour
             //Response Time
             entry.ResponseTime = entry.ResponseMade - entry.ResponseCued;
 
-            yield return new WaitForSeconds(.1f);
+/*            yield return new WaitForSeconds(.1f);*/
      
 
             //Trial End
