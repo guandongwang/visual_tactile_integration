@@ -11,6 +11,7 @@ public class TestingSequence : MonoBehaviour
     InfoInspector infoInspector;
     VrDeviceManager vrDeviceManager;
     PhysicalDeviceManager physicalDeviceManager;
+    CreateStimulus createStimulus;
 
     GameObject device;
 
@@ -59,12 +60,8 @@ public class TestingSequence : MonoBehaviour
             if (infoInspector.IsBlockRunning)
             {
                 infoInspector.IsBlockRunning = false;
-                //if (infoInspector.condition == InfoInspector.Condition.Vision)
-                //{ StopCoroutine(ExperimentBlockVisionOnly()); }
-                //else
-                //{ StopCoroutine(ExperimentBlock()); }
 
-                StopCoroutine(ExperimentBlock())
+                StopCoroutine(ExperimentBlock());
             }
         }
 
@@ -75,18 +72,6 @@ public class TestingSequence : MonoBehaviour
     {
         EventManager.TriggerEvent("OnBlockStart");
         StartCoroutine(ExperimentBlock());
-        //        
-        //switch (infoInspector.condition)
-        //{
-        //    case InfoInspector.Condition.Vision:
-        //        StartCoroutine(ExperimentBlockVisionOnly());
-        //        break;
-
-        //    default:
-        //        StartCoroutine(ExperimentBlock());
-        //        break;
-
-        //}
 
 
     }
@@ -178,78 +163,114 @@ public class TestingSequence : MonoBehaviour
         infoInspector.IsTrackerEnabled = true;
     }
 
+    void StimulusToData(Stimulus stimulus, TrialDataEntry trialDataEntry)
+    {
 
+        trialDataEntry.Condition = stimulus.Condition;
+        trialDataEntry.StimPairIndex = stimulus.StimPairIndex;
+        trialDataEntry.S1Vision = stimulus.S1Vision;
+        trialDataEntry.S1Touch = stimulus.S1Vision;
+        trialDataEntry.S2Vision = stimulus.S2Vision;
+        trialDataEntry.S2Touch = stimulus.S2Touch;
+    }
     IEnumerator ExperimentBlock()
     {
         
         infoInspector.CurrentEvent = "Block " + (infoInspector.CurrentBlock) + " start";
         infoInspector.IsBlockRunning = true;
-        
 
-        foreach (TrialDataEntry entry in dataRecorder.trialData)
+        List<Stimulus> blockStimulus = createStimulus.SessionStimulusCollection[infoInspector.CurrentBlock];
+
+        int index = 0;
+
+        foreach (Stimulus stimulus in blockStimulus)
         {
-           
-            infoInspector.CurrentTrial = entry.TrialNumber;
+            TrialDataEntry entry = new TrialDataEntry(infoInspector.id, infoInspector.initial, infoInspector.age, infoInspector.gender.ToString());
+
+            entry.TrialNumber = index;
+
+            StimulusToData(stimulus, entry);
 
             infoInspector.IsResponseMade = false;
+
             //Trial Start
             entry.TrialStartTime = Time.time;
             infoInspector.CurrentEvent = "Trial " + (entry.TrialNumber) + " start";
         
 
-            //S1 Onset
-            entry.S1Onset = Time.time;
+            //S1 Begin
+            entry.S1Begin = Time.time;
 
-            physicalDeviceManager.WriteSerialData(stimulusGeneration.tactileDisksDic[entry.S1Touch]);
-            while (!infoInspector.IsTouchWheelReady)
-            { yield return new WaitForSeconds(0.1f); }
-            physicalDeviceManager.WriteSerialData("p");
-            while (!infoInspector.IsTouchWheelReady)
-            { yield return new WaitForSeconds(0.1f); }
+            if (stimulus.Condition == "Vision")
+            {
+                //Compensation for other condition's ITI
+                yield return new WaitForSeconds(2.5f);
+            }
+            else
+            {
+                physicalDeviceManager.WriteSerialData(stimulusGeneration.tactileDisksDic[entry.S1Touch]);
+                while (!infoInspector.IsTouchWheelReady)
+                { yield return new WaitForSeconds(0.1f); }
+                physicalDeviceManager.WriteSerialData("p");
+                while (!infoInspector.IsTouchWheelReady)
+                { yield return new WaitForSeconds(0.1f); }
+            }
             vrDeviceManager.PresentDisk(entry.S1Vision);
+
+            //S1 Presnetation Begin
+            entry.S1PresnetationBegin = Time.time;
             yield return new WaitForSeconds(2f);
+            //S1 End
+            entry.S1PresnetationEnd = Time.time;
 
-            //S1 Offset
-            entry.S1Offset = Time.time;
-
-            physicalDeviceManager.WriteSerialData("n");
-            while (!infoInspector.IsTouchWheelReady)
-            { yield return new WaitForSeconds(0.1f); }
+            if (stimulus.Condition != "Vision")
+            {
+                physicalDeviceManager.WriteSerialData("n");
+                while (!infoInspector.IsTouchWheelReady)
+                { yield return new WaitForSeconds(0.1f); }
+            }
             vrDeviceManager.HideDisk(entry.S1Vision);
-            /*yield return new WaitForSeconds(.5f);*/
+            //S1 Presnetation End
+            entry.S1PresnetationEnd = Time.time;
+
+ 
 
 
             //S2
-            entry.S2Onset = Time.time;
+            entry.S2Begin = Time.time;
 
-            physicalDeviceManager.WriteSerialData(stimulusGeneration.tactileDisksDic[entry.S2Touch]);
-            while (!infoInspector.IsTouchWheelReady)
-            { yield return new WaitForSeconds(0.1f); }
+            if (stimulus.Condition == "Vision")
+            {
+                //Compensation for other Condition's ISI
+                yield return new WaitForSeconds(2.5f);
+            }
+            else
+            {
+                physicalDeviceManager.WriteSerialData(stimulusGeneration.tactileDisksDic[entry.S2Touch]);
+                while (!infoInspector.IsTouchWheelReady)
+                { yield return new WaitForSeconds(0.1f); }
 
-
-/*            //ensure 3s gap
-            float remainGap = (Time.time - entry.S2Onset);
-            if (remainGap > 0)
-            { yield return new WaitForSeconds(remainGap);
-            }*/
-
-            physicalDeviceManager.WriteSerialData("p");
-            while (!infoInspector.IsTouchWheelReady )
-            { yield return new WaitForSeconds(0.1f); }
-
-
-
+                physicalDeviceManager.WriteSerialData("p");
+                while (!infoInspector.IsTouchWheelReady)
+                { yield return new WaitForSeconds(0.1f); }
+            }
+          
+            entry.S2PresnetationBegin = Time.time;
             vrDeviceManager.PresentDisk(entry.S2Vision);
             yield return new WaitForSeconds(2f);
 
             //S2 Offset
-            entry.S2Offset = Time.time;
+            entry.S2End = Time.time;
 
-            physicalDeviceManager.WriteSerialData("n");
-            while (!infoInspector.IsTouchWheelReady)
-            { yield return null; }
+            if (stimulus.Condition != "Vision")
+            {
+                physicalDeviceManager.WriteSerialData("n");
+                while (!infoInspector.IsTouchWheelReady)
+                { yield return null; } 
+            }
+
+            entry.S2PresnetationEnd = Time.time;
             vrDeviceManager.HideDisk(entry.S2Vision);
-
             //Response Cued
             entry.ResponseCued = Time.time;
             vrDeviceManager.PresentDisk("cue");
@@ -270,17 +291,20 @@ public class TestingSequence : MonoBehaviour
                 yield return null;
             }
             //Response Made
+            entry.ResponseMade = Time.time;
+
+            //Response Made
             vrDeviceManager.HideDisk("cue");
             entry.RespResult = entry.TargetResponse.Contains(entry.Response);
             Debug.Log("Resp Result: " + entry.RespResult);
 
-            //Response Made
-            entry.ResponseMade = Time.time;
+         
             //Response Time
             entry.ResponseTime = entry.ResponseMade - entry.ResponseCued;
 
-/*            yield return new WaitForSeconds(.1f);*/
-     
+            yield return new WaitForSeconds(.1f);
+
+
 
             //Trial End
             entry.TrialEndTime = Time.time;

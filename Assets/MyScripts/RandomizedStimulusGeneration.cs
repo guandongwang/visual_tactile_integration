@@ -19,19 +19,7 @@ public class RandomizedStimulusGeneration : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //    SessionStimulusCollection = CreateSessionStimulus();
-        //    foreach (List<Stimulus> blockStim in SessionStimulusCollection)
-        //    {
-        //        foreach (Stimulus stim in blockStim)
-        //        {
-        //            Debug.Log(stim.GetValues());
-        //        }
-        //    }
 
-
-        //}
     }
 
     List<List<Stimulus>> CreateSessionStimulus()

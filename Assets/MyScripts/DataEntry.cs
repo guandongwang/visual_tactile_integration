@@ -14,7 +14,7 @@ public class DataEntry
     public string Gender { get; set; }
     //public string Condition { get; set; }
 
-    public DataEntry(int id, String initial, int age, string gender, string condition)
+    public DataEntry(int id, String initial, int age, string gender)
 
     {
 

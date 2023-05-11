@@ -33,20 +33,28 @@ public class TrialDataEntry : DataEntry
 
 
     public float TrialStartTime { get; set; }
-    public float S1Onset { get; set; }
-    public float S1Offset { get; set; }
-    public float S2Onset { get; set; }
-    public float S2Offset { get; set; }
-    public float ResponseCued { get; set; }
+
+    public float S1Begin { get; set; }
+    public float S1PresnetationBegin{ get; set; }
+    public float S1End { get; set; }
+    public float S1PresnetationEnd { get; set; }
+
+    public float S2Begin { get; set; }
+    public float S2PresnetationBegin { get; set; }
+    public float S2End { get; set; }
+
+    public float S2PresnetationEnd { get; set; }
+
+    public float ResponseCued { get; set; }//same as s2 presentation end
     public float ResponseMade { get; set; }
     public float TrialEndTime { get; set; }
 
 
 
-    public TrialDataEntry(int id, String initial, int age, string gender, string condition)
-    : base(id, initial, age, gender, condition) { }
+    public TrialDataEntry(int id, String initial, int age, string gender)
+    : base(id, initial, age, gender) { }
 
     public TrialDataEntry(DataEntry dataEntry)
-      : base(dataEntry.ID, dataEntry.Initial, dataEntry.Age, dataEntry.Gender, dataEntry.Condition) { }
+      : base(dataEntry.ID, dataEntry.Initial, dataEntry.Age, dataEntry.Gender) { }
 
 }

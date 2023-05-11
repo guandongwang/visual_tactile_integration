@@ -157,8 +157,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 3
-  initial: ML
-  age: 0
+  initial: CF
+  age: 18
   gender: 0
   condition: 1
   NumberOfBlocks: 10

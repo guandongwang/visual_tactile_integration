@@ -50,15 +50,13 @@ public class PhysicalDeviceManager : MonoBehaviour
 
     void StartSerialComm()
     {
-        if (infoInspector.condition != InfoInspector.Condition.Vision)
-        {
+   
             running = true;
             serialPort = new SerialPort("COM3", 9600);
             serialPort.Open();
 
             readThread = new Thread(new ThreadStart(ReadSerialData));
             readThread.Start();
-        }
     }
 
     void StopSerialComm()
