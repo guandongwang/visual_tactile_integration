@@ -51,10 +51,10 @@ public class TrialDataEntry : DataEntry
 
 
 
-    public TrialDataEntry(int id, String initial, int age, string gender)
-    : base(id, initial, age, gender) { }
+    public TrialDataEntry(int id, String initial, int age, string gender, int block)
+    : base(id, initial, age, gender, block) { }
 
     public TrialDataEntry(DataEntry dataEntry)
-      : base(dataEntry.ID, dataEntry.Initial, dataEntry.Age, dataEntry.Gender) { }
+      : base(dataEntry.ID, dataEntry.Initial, dataEntry.Age, dataEntry.Gender, dataEntry.Block) { }
 
 }

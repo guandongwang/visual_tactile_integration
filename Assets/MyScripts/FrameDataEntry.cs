@@ -43,9 +43,9 @@ public class FrameDataEntry : DataEntry
     public float EyeOpennessLeft { get; set; }
     public float EyeOpennessRight { get; set; }
 
-    public FrameDataEntry(int id, String initial, int age, string gender)
-        : base(id, initial, age, gender) { }
+    public FrameDataEntry(int id, String initial, int age, string gender, int block)
+        : base(id, initial, age, gender, block) { }
     public FrameDataEntry(DataEntry dataEntry)
-        : base(dataEntry.ID, dataEntry.Initial, dataEntry.Age, dataEntry.Gender) { }
+        : base(dataEntry.ID, dataEntry.Initial, dataEntry.Age, dataEntry.Gender, dataEntry.Block) { }
     
 }

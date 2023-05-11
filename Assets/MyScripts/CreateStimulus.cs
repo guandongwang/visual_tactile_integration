@@ -132,6 +132,26 @@ public class CreateStimulus : MonoBehaviour
 
                 }
 
+                switch (stimulus.StimPairIndex)
+                {
+                    case 0:
+                    case 1:
+                    case 8:
+                    case 9:
+                        stimulus.TargetResponse = "D";
+                        break;
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                        stimulus.TargetResponse = "U";
+                        break;
+                    case 2:
+                    case 7:
+                        stimulus.TargetResponse = "DU";
+                        break;
+                }
+
 
                 stimulusCollection.Add(stimulus);
             }

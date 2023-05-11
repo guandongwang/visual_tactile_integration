@@ -14,6 +14,7 @@ public class Stimulus
     public string S1Touch { get; set; }
     public string S2Vision { get; set; }
     public string S2Touch { get; set; }
+    public string TargetResponse { get; set; }
 
     public string GetValues()
     {

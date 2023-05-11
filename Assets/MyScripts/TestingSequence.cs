@@ -76,92 +76,7 @@ public class TestingSequence : MonoBehaviour
 
     }
 
-    IEnumerator ExperimentBlockVisionOnly()
-    {
-        physicalDeviceManager.enabled = false;
-        
-        infoInspector.CurrentEvent = "Block " + (infoInspector.CurrentBlock) + " start";
-        infoInspector.IsBlockRunning = true;
-
-
-        foreach (TrialDataEntry entry in dataRecorder.trialData)
-        {
-
-            infoInspector.CurrentTrial = entry.TrialNumber;
-
-            infoInspector.IsResponseMade = false;
-            //Trial Start
-            entry.TrialStartTime = Time.time;
-            infoInspector.CurrentEvent = "Trial " + (entry.TrialNumber) + " start";
-
-            //S1 Onset
-            entry.S1Onset = Time.time;
-            vrDeviceManager.PresentDisk(entry.S1Vision);
-            yield return new WaitForSeconds(2f);
-
-            //S1 Offset
-            entry.S1Offset = Time.time;
-
-
-            vrDeviceManager.HideDisk(entry.S1Vision);
-
-            //compensate for other condition
-            yield return new WaitForSeconds(2.5f);
-
-
-            //s2
-            entry.S2Onset = Time.time;
-            vrDeviceManager.PresentDisk(entry.S2Vision);
-            yield return new WaitForSeconds(2f);
-
-            //S2 Offset
-            entry.S2Offset = Time.time;
-            vrDeviceManager.HideDisk(entry.S2Vision);
-
-            //Response Cued
-            entry.ResponseCued = Time.time;
-            vrDeviceManager.PresentDisk("cue");
-
-            while (!infoInspector.IsResponseMade)
-            {
-                if (Input.GetKeyDown(KeyCode.UpArrow))
-                {
-                    entry.Response = "U"; //Freqeuncy went up from 1 to 2
-                    infoInspector.IsResponseMade = true;
-                }
-
-                else if (Input.GetKeyDown(KeyCode.DownArrow))
-                {
-                    entry.Response = "D"; //Freqeuncy went down from 1 to 2
-                    infoInspector.IsResponseMade = true;
-                }
-                yield return null;
-            }
-            //Response Made
-            vrDeviceManager.HideDisk("cue");
-            entry.RespResult = entry.TargetResponse.Contains(entry.Response);
-            Debug.Log("Resp Result: " + entry.RespResult);
-
-            //Response Made
-            entry.ResponseMade = Time.time;
-            //Response Time
-            entry.ResponseTime = entry.ResponseMade - entry.ResponseCued;
-
-            yield return new WaitForSeconds(1f);
-
-
-            //Trial End
-            entry.TrialEndTime = Time.time;
-            //Trial Duration
-            entry.TrialDuration = entry.TrialEndTime - entry.TrialStartTime;
-
-
-        }
-        infoInspector.CurrentBlock++;
-        infoInspector.IsBlockRunning = false;
-        EventManager.TriggerEvent("BlockFinished");
-        infoInspector.IsTrackerEnabled = true;
-    }
+   
 
     void StimulusToData(Stimulus stimulus, TrialDataEntry trialDataEntry)
     {
@@ -180,12 +95,15 @@ public class TestingSequence : MonoBehaviour
         infoInspector.IsBlockRunning = true;
 
         List<Stimulus> blockStimulus = createStimulus.SessionStimulusCollection[infoInspector.CurrentBlock];
-
+        List<TrialDataEntry> trialData = new List<TrialDataEntry>();
+        List<FrameDataEntry> frameData;
         int index = 0;
 
         foreach (Stimulus stimulus in blockStimulus)
         {
-            TrialDataEntry entry = new TrialDataEntry(infoInspector.id, infoInspector.initial, infoInspector.age, infoInspector.gender.ToString());
+            TrialDataEntry entry = new TrialDataEntry(infoInspector.id,
+                infoInspector.initial, infoInspector.age,
+                infoInspector.gender.ToString(),infoInspector.CurrentBlock);
 
             entry.TrialNumber = index;
 
@@ -293,6 +211,8 @@ public class TestingSequence : MonoBehaviour
             //Response Made
             entry.ResponseMade = Time.time;
 
+            
+
             //Response Made
             vrDeviceManager.HideDisk("cue");
             entry.RespResult = entry.TargetResponse.Contains(entry.Response);
@@ -311,11 +231,13 @@ public class TestingSequence : MonoBehaviour
             //Trial Duration
             entry.TrialDuration = entry.TrialEndTime - entry.TrialStartTime;
 
-           
+            trialData.Add(entry);
         }
         infoInspector.CurrentBlock++;
         infoInspector.IsBlockRunning = false;
         EventManager.TriggerEvent("BlockFinished");
+        DataRecorder.SaveToCSV(trialData, "trial");
+        DataRecorder.SaveToCSV(frameData, "frame");
         infoInspector.IsTrackerEnabled = true;
     }
 

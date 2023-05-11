@@ -9,130 +9,126 @@ using System.Text;
 public class DataRecorder : MonoBehaviour
 {
     TestingSequence testingSequence;
-    StimulusGeneration stimulusGeneration;
-    FrameDataRecorder frameDataRecorder;
     InfoInspector infoInspector;
     CreateStimulus createStimulus;
+    EyeTracking eyeTracking;
 
+    GameObject tracker;
+    Camera mainCamera;
 
-    public List<TrialDataEntry> trialData;
-    
    
+
 
 
     // Start is called before the first frame update
     void Start()
     {
         testingSequence = GetComponent<TestingSequence>();
-        stimulusGeneration = GetComponent<StimulusGeneration>();
-        frameDataRecorder = GetComponent<FrameDataRecorder>();
         infoInspector = GetComponent<InfoInspector>();
-    }
 
-    void OnEnable()
-    {
-        EventManager.StartListening("OnStimulusCreated", CreateDataFile);
-        EventManager.StartListening("BlockFinished", SaveToCSV);
-    }
-
-    void OnDisable()
-    {
-        EventManager.StopListening("OnStimulusCreated", CreateDataFile);
-        EventManager.StopListening("BlockFinished", SaveToCSV);
-    }
-
-    
-    void CreateDataFile()
-    {
-        infoInspector.CurrentEvent = "Creat Trial Data File";
-        trialData = new List<TrialDataEntry>();
-
-        //get the stimulus list for current block from createStimulus 
-        List<Stimulus> blockStimulus = createStimulus.SessionStimulusCollection[infoInspector.CurrentBlock];
-        int index = 0;
-
-        foreach(Stimulus stimulus in blockStimulus)
-        {
-            TrialDataEntry trialDataEntry = new TrialDataEntry(infoInspector.id, infoInspector.initial, infoInspector.age, infoInspector.gender.ToString(), infoInspector.condition.ToString());
-
-            trialDataEntry.TrialNumber = index;
-            trialDataEntry.StimPairIndex = stimulus.StimPairIndex;
-            //trialDataEntry.IsTestingStimAtPos2 = stimPairIndex < 5;
-
-            trialDataEntry.S1Vision = stimulus.S1Vision;
-            trialDataEntry.S1Touch = stimulus.S1Vision;
-            trialDataEntry.S2Vision = stimulus.S2Vision;
-            trialDataEntry.S2Touch = stimulus.S2Touch;
-             //trialDataEntry.S1VisionOri = 0;
-            //trialDataEntry.S2VisionOri = 0;
-
-            switch (stimulus.StimPairIndex)
-            {
-                case 0:
-                case 1:
-                case 8:
-                case 9:
-                    trialDataEntry.TargetResponse = "D";
-                    break;
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                    trialDataEntry.TargetResponse = "U";
-                    break;
-                case 2:
-                case 7:
-                    trialDataEntry.TargetResponse = "DU";
-                    break;
-            }
-
-            
-            trialData.Add(trialDataEntry);
-            index++;
-          
-        }
-
-        infoInspector.CurrentEvent = "OnTrialDataFileReady";
-        EventManager.TriggerEvent("OnTrialDataFileReady");
-
-    }
-
-    void SaveToCSV()
-    {
-        string baseFolder = "C:\\Users\\gwan5836\\OneDrive - The University of Sydney (Staff)\\2023\\vr texture integration\\raw data\\";
-
-        string subjectFolder =  trialData[0].ID + "_" + trialData[0].Initial;
-
-        string fileName = "trial_" + trialData[0].ID + "_" + trialData[0].Initial + "_" + trialData[0].Condition + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
-
-        string folderPath = Path.Combine(baseFolder, subjectFolder);
-
-        if (!System.IO.Directory.Exists(folderPath))
-        {
-            System.IO.Directory.CreateDirectory(folderPath);
-        }
+        GameObject cameraRig = GameObject.Find("ViveCameraRig");
+        mainCamera = cameraRig.GetComponentInChildren<Camera>();
 
 
-        string filePath = Path.Combine(folderPath, fileName);
+        /*_device = GameObject.Find("Device");*/
+        /*_tracker = _device.transform.parent.gameObject;*/
+        tracker = GameObject.Find("Tracker1");
 
-        string headers = trialData[0].GetHeaders();
+       
+        testingSequence = GetComponent<TestingSequence>();
 
-        StringBuilder dataFile = new();
-        dataFile.AppendLine(headers);
+        GameObject srAnipal = GameObject.Find("SRanipal");
+        eyeTracking = srAnipal.GetComponent<EyeTracking>();
 
-        foreach (TrialDataEntry entry in trialData)
-        {
-            dataFile.AppendLine(entry.GetValues());
-        }
+        infoInspector = GetComponent<InfoInspector>();
 
-        File.WriteAllText(filePath, dataFile.ToString());
-        Debug.Log("Trial Data Saved");
     }
 
 
     // Update is called once per frame
     void Update()
     {
+        if (infoInspector.IsBlockRunning)
+        {
+            FrameDataEntry frameDataEntry =
+            new FrameDataEntry(infoInspector.id, infoInspector.initial, infoInspector.age,
+            infoInspector.gender.ToString(), infoInspector.CurrentBlock);
+
+            frameDataEntry.Frame = Time.frameCount;
+            frameDataEntry.Time = Time.time;
+            frameDataEntry.TrialNumber = infoInspector.CurrentTrial;
+
+            
+            frameDataEntry.TouchWheelMessage = infoInspector.TouchWheelMessage;
+            frameDataEntry.EventsLog = infoInspector.CurrentEvent;
+        
+
+            //Head
+            frameDataEntry.HeadPositionX = mainCamera.transform.position.x;
+            frameDataEntry.HeadPositionY = mainCamera.transform.position.y;
+            frameDataEntry.HeadPositionZ = mainCamera.transform.position.z;
+
+            frameDataEntry.HeadRotationX = mainCamera.transform.eulerAngles.x;
+            frameDataEntry.HeadRotationY = mainCamera.transform.eulerAngles.y;
+            frameDataEntry.HeadRotationZ = mainCamera.transform.eulerAngles.z;
+
+            //Tracker
+            frameDataEntry.TrackerPositionX = tracker.transform.position.x;
+            frameDataEntry.TrackerPositionY = tracker.transform.position.y;
+            frameDataEntry.TrackerPositionZ = tracker.transform.position.z;
+
+            frameDataEntry.TrackerRotationX = tracker.transform.eulerAngles.x;
+            frameDataEntry.TrackerRotationY = tracker.transform.eulerAngles.y;
+            frameDataEntry.TrackerRotationZ = tracker.transform.eulerAngles.z;
+
+            frameDataEntry.VectGazeOriginX = eyeTracking.VectGazeOrigin.x;
+            frameDataEntry.VectGazeOriginY = eyeTracking.VectGazeOrigin.y;
+            frameDataEntry.VectGazeOriginZ = eyeTracking.VectGazeOrigin.z;
+
+            frameDataEntry.VectGazeDirectionX = eyeTracking.VectGazeDirection.x;
+            frameDataEntry.VectGazeDirectionY = eyeTracking.VectGazeDirection.y;
+            frameDataEntry.VectGazeDirectionZ = eyeTracking.VectGazeDirection.z;
+
+            frameDataEntry.EyeOpennessLeft = eyeTracking.EyeOpennessLeft;
+            frameDataEntry.EyeOpennessRight = eyeTracking.EyeOpennessRight;
+            
+        }
 
     }
+    
+    public static void SaveToCSV<T>(List<T> data, string dataType) where T : DataEntry
+    {
+        {
+            string baseFolder = "C:\\Users\\gwan5836\\OneDrive - The University of Sydney (Staff)\\2023\\vr texture integration\\raw data\\";
+
+            string subjectFolder = data[0].ID + "_" + data[0].Initial;
+
+            string fileName = dataType + "_" + data[0].ID + "_" + data[0].Initial + "_" + data[0].Block + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_(HH.mm.ss)") + ".csv";
+
+            string folderPath = Path.Combine(baseFolder, subjectFolder);
+
+            if (!System.IO.Directory.Exists(folderPath))
+            {
+                System.IO.Directory.CreateDirectory(folderPath);
+            }
+
+
+            string filePath = Path.Combine(folderPath, fileName);
+
+            string headers = data[0].GetHeaders();
+
+            StringBuilder dataFile = new();
+            dataFile.AppendLine(headers);
+
+            foreach (var entry in data)
+            {
+                dataFile.AppendLine(entry.GetValues());
+            }
+
+            File.WriteAllText(filePath, dataFile.ToString());
+            Debug.Log(dataType + " Data File Saved");
+        }
+    }
+
+
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using System.Reflection;
 using System.Linq;
+using System.IO;
+using System.Text;
 
 
 public class DataEntry
@@ -12,9 +14,10 @@ public class DataEntry
     public string Initial { get; set; }
     public int Age { get; set; }
     public string Gender { get; set; }
+    public int Block { get; set; }
     //public string Condition { get; set; }
 
-    public DataEntry(int id, String initial, int age, string gender)
+    public DataEntry(int id, String initial, int age, string gender, int block)
 
     {
 
@@ -22,6 +25,7 @@ public class DataEntry
         Initial = initial;
         Age = age;
         Gender = gender;
+        Block = block;
         //Condition = condition;
 
     }
@@ -43,4 +47,5 @@ public class DataEntry
         string[] headers = properties.Select(p => p.Name).ToArray();
         return string.Join(", ", headers);
     }
+
 }
