@@ -59,10 +59,12 @@ public class TestingSequence : MonoBehaviour
             if (infoInspector.IsBlockRunning)
             {
                 infoInspector.IsBlockRunning = false;
-                if (infoInspector.condition == InfoInspector.Condition.Vision)
-                { StopCoroutine(ExperimentBlockVisionOnly()); }
-                else
-                { StopCoroutine(ExperimentBlock()); }
+                //if (infoInspector.condition == InfoInspector.Condition.Vision)
+                //{ StopCoroutine(ExperimentBlockVisionOnly()); }
+                //else
+                //{ StopCoroutine(ExperimentBlock()); }
+
+                StopCoroutine(ExperimentBlock())
             }
         }
 
@@ -72,20 +74,21 @@ public class TestingSequence : MonoBehaviour
     void StartBlock()
     {
         EventManager.TriggerEvent("OnBlockStart");
+        StartCoroutine(ExperimentBlock());
+        //        
+        //switch (infoInspector.condition)
+        //{
+        //    case InfoInspector.Condition.Vision:
+        //        StartCoroutine(ExperimentBlockVisionOnly());
+        //        break;
 
-        switch (infoInspector.condition)
-        {
-            case InfoInspector.Condition.Vision:
-                StartCoroutine(ExperimentBlockVisionOnly());
-                break;
+        //    default:
+        //        StartCoroutine(ExperimentBlock());
+        //        break;
 
-            default:
-                StartCoroutine(ExperimentBlock());
-                break;
+        //}
 
-        }
- 
-     
+
     }
 
     IEnumerator ExperimentBlockVisionOnly()

@@ -8,11 +8,13 @@ using System.Linq;
 public class Stimulus 
 {
     public string Condition { get; set; }
-    public int StimPairNumber { get; set; }
+    public int StimPairIndex { get; set; }
+    public int ReferenceLocation { get; set; }
     public string S1Vision { get; set; }
-    public string S2Vision { get; set; }
     public string S1Touch { get; set; }
+    public string S2Vision { get; set; }
     public string S2Touch { get; set; }
+
     public string GetValues()
     {
         Type type = this.GetType();
@@ -30,5 +32,7 @@ public class Stimulus
         string[] headers = properties.Select(p => p.Name).ToArray();
         return string.Join(", ", headers);
     }
+
+
 }
 

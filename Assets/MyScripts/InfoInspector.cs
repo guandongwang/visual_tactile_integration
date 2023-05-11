@@ -9,7 +9,7 @@ public class InfoInspector : MonoBehaviour
     public string initial;
     public int age;
     public Gender gender;
-    public Condition condition;
+    //public Condition condition;
 
     [Space]
     [Header("Block Info")]
@@ -40,7 +40,7 @@ public class InfoInspector : MonoBehaviour
     public bool IsTrackerEnabled;
 
 
-    private Condition currentCondition;
+    //private Condition currentCondition;
     // Start is called before the first frame update
     void Start()
     {
@@ -57,7 +57,7 @@ public class InfoInspector : MonoBehaviour
 
         IsTrackerEnabled = true;
 
-        currentCondition = condition;
+        //currentCondition = condition;
     }
 
     // Update is called once per frame
@@ -66,23 +66,23 @@ public class InfoInspector : MonoBehaviour
 
      ReadyToStartBlock = !IsBlockRunning && CurrentBlock <= NumberOfBlocks;
      
-        if (condition != currentCondition)
-        {
-            currentCondition = condition;
-            CurrentBlock = 1;
-        }
+        //if (condition != currentCondition)
+        //{
+        //    currentCondition = condition;
+        //    CurrentBlock = 1;
+        //}
    
     }
 
 
-    public enum Condition
-    {
-        Vision,
-        Touch,
-        Combine,
-        VLowerFreqThanT,
-        VHigherFreqThanT
-    }
+    //public enum Condition
+    //{
+    //    Vision,
+    //    Touch,
+    //    Combine,
+    //    VLowerFreqThanT,
+    //    VHigherFreqThanT
+    //}
 
     public enum Gender
     {

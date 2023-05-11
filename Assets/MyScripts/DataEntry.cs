@@ -12,7 +12,7 @@ public class DataEntry
     public string Initial { get; set; }
     public int Age { get; set; }
     public string Gender { get; set; }
-    public string Condition { get; set; }
+    //public string Condition { get; set; }
 
     public DataEntry(int id, String initial, int age, string gender, string condition)
 
@@ -22,7 +22,7 @@ public class DataEntry
         Initial = initial;
         Age = age;
         Gender = gender;
-        Condition = condition;
+        //Condition = condition;
 
     }
 

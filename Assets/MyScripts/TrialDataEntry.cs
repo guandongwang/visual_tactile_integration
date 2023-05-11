@@ -9,15 +9,20 @@ public class TrialDataEntry : DataEntry
 {
 
     public int TrialNumber { get; set; }
+
+    public string Condition { get; set; }
     public int StimPairIndex { get; set; }
-    public bool IsTestingStimAtPos2 { get; set; }
+    public int RefernceLocation { get; set; }
     public string S1Vision { get; set; }
-    public int S1VisionOri { get; set; }
+    //public int S1VisionOri { get; set; }
     public string S1Touch { get; set; }
     public string S2Vision { get; set; }
-    public int S2VisionOri { get; set; }
+    //public int S2VisionOri { get; set; }
     public string S2Touch { get; set; }
 
+
+    //public bool IsTestingStimAtPos2 { get; set; }
+    
         
     public string Response { get; set; }
     public string TargetResponse { get; set; }

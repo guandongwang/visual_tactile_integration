@@ -12,6 +12,7 @@ public class DataRecorder : MonoBehaviour
     StimulusGeneration stimulusGeneration;
     FrameDataRecorder frameDataRecorder;
     InfoInspector infoInspector;
+    CreateStimulus createStimulus;
 
 
     public List<TrialDataEntry> trialData;
@@ -46,24 +47,26 @@ public class DataRecorder : MonoBehaviour
         infoInspector.CurrentEvent = "Creat Trial Data File";
         trialData = new List<TrialDataEntry>();
 
-        int index = 1;
+        //get the stimulus list for current block from createStimulus 
+        List<Stimulus> blockStimulus = createStimulus.SessionStimulusCollection[infoInspector.CurrentBlock];
+        int index = 0;
 
-        foreach(int stimPairIndex in stimulusGeneration.blockStimPair)
+        foreach(Stimulus stimulus in blockStimulus)
         {
             TrialDataEntry trialDataEntry = new TrialDataEntry(infoInspector.id, infoInspector.initial, infoInspector.age, infoInspector.gender.ToString(), infoInspector.condition.ToString());
 
             trialDataEntry.TrialNumber = index;
-            trialDataEntry.StimPairIndex = stimPairIndex;
-            trialDataEntry.IsTestingStimAtPos2 = stimPairIndex < 5;
+            trialDataEntry.StimPairIndex = stimulus.StimPairIndex;
+            //trialDataEntry.IsTestingStimAtPos2 = stimPairIndex < 5;
 
-            trialDataEntry.S1Touch = stimulusGeneration.tactileStimPair[stimPairIndex][0];
-            trialDataEntry.S1Vision = stimulusGeneration.visualStimPair[stimPairIndex][0];
-            trialDataEntry.S1VisionOri = 0;
-            trialDataEntry.S2Touch = stimulusGeneration.tactileStimPair[stimPairIndex][1];
-            trialDataEntry.S2Vision = stimulusGeneration.visualStimPair[stimPairIndex][1];
-            trialDataEntry.S2VisionOri = 0;
+            trialDataEntry.S1Vision = stimulus.S1Vision;
+            trialDataEntry.S1Touch = stimulus.S1Vision;
+            trialDataEntry.S2Vision = stimulus.S2Vision;
+            trialDataEntry.S2Touch = stimulus.S2Touch;
+             //trialDataEntry.S1VisionOri = 0;
+            //trialDataEntry.S2VisionOri = 0;
 
-            switch (stimPairIndex)
+            switch (stimulus.StimPairIndex)
             {
                 case 0:
                 case 1:
