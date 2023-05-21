@@ -48,6 +48,10 @@ public class CreateStimulus : MonoBehaviour
                 stimulus.Condition = condition;
                 stimulus.StimPairIndex = i;
 
+                Random rnd = new Random();
+                stimulus.S1Orientation = rnd.Next(0, 359);
+                stimulus.S2Orientation = rnd.Next(0, 359);
+
                 if (i < 5)
                 {
                     stimulus.ReferenceLocation = 0;

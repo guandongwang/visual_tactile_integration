@@ -43,8 +43,6 @@ public class TestingSequence : MonoBehaviour
     void Update()
     {
 
-       
-
         if (Input.GetKeyDown(KeyCode.Space) & infoInspector.IsExperimentReady)
         {
             infoInspector.IsTrackerEnabled = false;
@@ -77,7 +75,6 @@ public class TestingSequence : MonoBehaviour
 
     void StimulusToData(Stimulus stimulus, TrialDataEntry trialDataEntry)
     {
-
         trialDataEntry.Condition = stimulus.Condition;
         trialDataEntry.StimPairIndex = stimulus.StimPairIndex;
         trialDataEntry.S1Vision = stimulus.S1Vision;
@@ -93,7 +90,7 @@ public class TestingSequence : MonoBehaviour
 
         List<Stimulus> blockStimulus = createStimulus.SessionStimulusCollection[infoInspector.CurrentBlock];
         List<TrialDataEntry> trialData = new List<TrialDataEntry>();
-        List<FrameDataEntry> frameData;
+        //list<framedataentry> framedata = new list<framedataentry>();
         int index = 0;
 
         foreach (Stimulus stimulus in blockStimulus)
@@ -123,7 +120,7 @@ public class TestingSequence : MonoBehaviour
             }
             else
             {
-                physicalDeviceManager.WriteSerialData(stimulusGeneration.tactileDisksDic[entry.S1Touch]);
+                physicalDeviceManager.WriteSerialData(stimulus.S1Touch);
                 while (!infoInspector.IsTouchWheelReady)
                 { yield return new WaitForSeconds(0.1f); }
                 physicalDeviceManager.WriteSerialData("p");
@@ -161,7 +158,7 @@ public class TestingSequence : MonoBehaviour
             }
             else
             {
-                physicalDeviceManager.WriteSerialData(stimulusGeneration.tactileDisksDic[entry.S2Touch]);
+                physicalDeviceManager.WriteSerialData(stimulus.S2Touch);
                 while (!infoInspector.IsTouchWheelReady)
                 { yield return new WaitForSeconds(0.1f); }
 
@@ -234,7 +231,8 @@ public class TestingSequence : MonoBehaviour
         infoInspector.IsBlockRunning = false;
         EventManager.TriggerEvent("BlockFinished");
         DataRecorder.SaveToCSV(trialData, "trial");
-        DataRecorder.SaveToCSV(frameData, "frame");
+        DataRecorder.SaveToCSV(dataRecorder.FrameData, "frame");
+        dataRecorder.FrameData = new List<FrameDataEntry>();//clear the frame data after saving
         infoInspector.IsTrackerEnabled = true;
     }
 

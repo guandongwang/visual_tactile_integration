@@ -16,6 +16,8 @@ public class DataRecorder : MonoBehaviour
     GameObject tracker;
     Camera mainCamera;
 
+    public List<FrameDataEntry> FrameData;
+
    
 
 
@@ -42,6 +44,7 @@ public class DataRecorder : MonoBehaviour
 
         infoInspector = GetComponent<InfoInspector>();
 
+        FrameData = new List<FrameDataEntry>();
     }
 
 
@@ -91,7 +94,8 @@ public class DataRecorder : MonoBehaviour
 
             frameDataEntry.EyeOpennessLeft = eyeTracking.EyeOpennessLeft;
             frameDataEntry.EyeOpennessRight = eyeTracking.EyeOpennessRight;
-            
+
+            FrameData.Add(frameDataEntry);
         }
 
     }
