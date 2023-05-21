@@ -9,7 +9,7 @@ public class InfoInspector : MonoBehaviour
     public string initial;
     public int age;
     public Gender gender;
-    //public Condition condition;
+
 
     [Space]
     [Header("Block Info")]
@@ -17,11 +17,14 @@ public class InfoInspector : MonoBehaviour
     public int NumberOfRepetitions ;
 
     [Space]
-    [Header("Status Monitor")]
-    public bool ReadyToStartBlock;
+    [Header("Experiment Status")]
+    public bool IsExperimentReady;
     public bool IsTouchWheelReady;
-    public bool IsEyeTrackingCalibrated ;
-    public bool IsInputFinished ;
+    public bool IsEyeTrackingCalibrated;
+
+    [Space]
+    [Header("Status Trigger")]
+    public bool IsInputFinished;
     public bool IsStimulusCreated ;
     public bool IsBlockRunning ;
     public bool IsResponseMade ;
@@ -64,25 +67,9 @@ public class InfoInspector : MonoBehaviour
     void Update()
     {
 
-     ReadyToStartBlock = !IsBlockRunning && CurrentBlock <= NumberOfBlocks;
+        IsExperimentReady = !IsBlockRunning && IsTouchWheelReady && IsEyeTrackingCalibrated && CurrentBlock <= NumberOfBlocks;
      
-        //if (condition != currentCondition)
-        //{
-        //    currentCondition = condition;
-        //    CurrentBlock = 1;
-        //}
-   
     }
-
-
-    //public enum Condition
-    //{
-    //    Vision,
-    //    Touch,
-    //    Combine,
-    //    VLowerFreqThanT,
-    //    VHigherFreqThanT
-    //}
 
     public enum Gender
     {

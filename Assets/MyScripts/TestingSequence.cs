@@ -22,7 +22,6 @@ public class TestingSequence : MonoBehaviour
         
 
         dataRecorder = GetComponent<DataRecorder>();
-        stimulusGeneration =GetComponent<StimulusGeneration>();
         infoInspector = GetComponent<InfoInspector>();
 
         device = GameObject.Find("Device");
@@ -46,11 +45,11 @@ public class TestingSequence : MonoBehaviour
 
        
 
-        if (Input.GetKeyDown(KeyCode.Space) & infoInspector.ReadyToStartBlock)
+        if (Input.GetKeyDown(KeyCode.Space) & infoInspector.IsExperimentReady)
         {
             infoInspector.IsTrackerEnabled = false;
-            infoInspector.CurrentEvent = "OnSessionStart";
-            EventManager.TriggerEvent("OnSessionStart");
+            infoInspector.CurrentEvent = "OnBlockStart";
+            EventManager.TriggerEvent("OnBlockStart");
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -59,7 +58,6 @@ public class TestingSequence : MonoBehaviour
             if (infoInspector.IsBlockRunning)
             {
                 infoInspector.IsBlockRunning = false;
-
                 StopCoroutine(ExperimentBlock());
             }
         }
