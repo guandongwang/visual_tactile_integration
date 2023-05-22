@@ -12,18 +12,21 @@ public class TrialDataEntry : DataEntry
 
     public string Condition { get; set; }
     public int StimPairIndex { get; set; }
-    public int RefernceLocation { get; set; }
+    public int ReferenceLocation { get; set; }
     public string S1Vision { get; set; }
     //public int S1VisionOri { get; set; }
     public string S1Touch { get; set; }
+    public int S1Steps { get; set; }
+    public float S1Orientation { get; set; }
     public string S2Vision { get; set; }
     //public int S2VisionOri { get; set; }
     public string S2Touch { get; set; }
-
+    public int S2Steps { get; set; }
+    public float S2Orientation { get; set; }
 
     //public bool IsTestingStimAtPos2 { get; set; }
-    
-        
+
+
     public string Response { get; set; }
     public string TargetResponse { get; set; }
     public bool RespResult { get; set; }

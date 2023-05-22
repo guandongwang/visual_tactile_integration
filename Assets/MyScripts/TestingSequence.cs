@@ -14,30 +14,40 @@ public class TestingSequence : MonoBehaviour
 
     GameObject device;
 
-   
+    public Dictionary<string, string> tactileDisksDic;
 
     // Start is called before the first frame update
     void Start()
     {
-        
 
         dataRecorder = GetComponent<DataRecorder>();
         infoInspector = GetComponent<InfoInspector>();
-
+        createStimulus = GetComponent<CreateStimulus>();
         device = GameObject.Find("Device");
         vrDeviceManager = device.GetComponent<VrDeviceManager>();
         physicalDeviceManager = device.GetComponent<PhysicalDeviceManager>();
+
+
+
+        List<string> tactileDisks = new List<string>() { "B3", "B7", "B11", "B15", "B19" };
+        tactileDisksDic = new Dictionary<string, string>();
+        tactileDisksDic.Add(tactileDisks[0], "a");
+        tactileDisksDic.Add(tactileDisks[1], "b");
+        tactileDisksDic.Add(tactileDisks[2], "c");
+        tactileDisksDic.Add(tactileDisks[3], "d");
+        tactileDisksDic.Add(tactileDisks[4], "e");
+        tactileDisksDic.Add("dummy", "dummy");
 
     }
 
     void OnEnable()
     {
-        EventManager.StartListening("OnTrialDataFileReady", StartBlock);
+        //EventManager.StartListening("OnTrialDataFileReady", StartBlock);
     }
 
     void OnDisable()
     {
-        EventManager.StopListening("OnTrialDataFileReady", StartBlock);
+        //EventManager.StopListening("OnTrialDataFileReady", StartBlock);
     }
     // Update is called once per frame
     void Update()
@@ -47,7 +57,9 @@ public class TestingSequence : MonoBehaviour
         {
             infoInspector.IsTrackerEnabled = false;
             infoInspector.CurrentEvent = "OnBlockStart";
-            EventManager.TriggerEvent("OnBlockStart");
+            Debug.Log("aba");
+            StartCoroutine(ExperimentBlock());
+            /*EventManager.TriggerEvent("OnBlockStart");*/
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -62,25 +74,30 @@ public class TestingSequence : MonoBehaviour
 
 
     }
-
+/*
     void StartBlock()
     {
-        EventManager.TriggerEvent("OnBlockStart");
+       *//* EventManager.TriggerEvent("OnBlockStart");*//*
         StartCoroutine(ExperimentBlock());
-
-
+        Debug.Log("aaa");
     }
-
+*/
    
 
     void StimulusToData(Stimulus stimulus, TrialDataEntry trialDataEntry)
     {
         trialDataEntry.Condition = stimulus.Condition;
         trialDataEntry.StimPairIndex = stimulus.StimPairIndex;
+        trialDataEntry.ReferenceLocation = stimulus.ReferenceLocation;
         trialDataEntry.S1Vision = stimulus.S1Vision;
         trialDataEntry.S1Touch = stimulus.S1Vision;
+        trialDataEntry.S1Steps = stimulus.S1Steps;
+        trialDataEntry.S1Orientation = stimulus.S1Orientation;
         trialDataEntry.S2Vision = stimulus.S2Vision;
         trialDataEntry.S2Touch = stimulus.S2Touch;
+        trialDataEntry.S2Steps = stimulus.S2Steps;
+        trialDataEntry.S2Orientation = stimulus.S2Orientation;
+        trialDataEntry.TargetResponse = stimulus.TargetResponse;
     }
     IEnumerator ExperimentBlock()
     {
@@ -92,17 +109,18 @@ public class TestingSequence : MonoBehaviour
         List<TrialDataEntry> trialData = new List<TrialDataEntry>();
         //list<framedataentry> framedata = new list<framedataentry>();
         int index = 0;
-
+        
         foreach (Stimulus stimulus in blockStimulus)
         {
             TrialDataEntry entry = new TrialDataEntry(infoInspector.id,
                 infoInspector.initial, infoInspector.age,
                 infoInspector.gender.ToString(),infoInspector.CurrentBlock);
-
+            
             entry.TrialNumber = index;
+            infoInspector.CurrentTrial = entry.TrialNumber;
 
             StimulusToData(stimulus, entry);
-
+            
             infoInspector.IsResponseMade = false;
 
             //Trial Start
@@ -120,20 +138,20 @@ public class TestingSequence : MonoBehaviour
             }
             else
             {
-                physicalDeviceManager.WriteSerialData(stimulus.S1Touch);
+                physicalDeviceManager.WriteSerialData(tactileDisksDic[stimulus.S1Touch] + stimulus.S1Steps);
                 while (!infoInspector.IsTouchWheelReady)
                 { yield return new WaitForSeconds(0.1f); }
                 physicalDeviceManager.WriteSerialData("p");
                 while (!infoInspector.IsTouchWheelReady)
                 { yield return new WaitForSeconds(0.1f); }
             }
-            vrDeviceManager.PresentDisk(entry.S1Vision);
+            vrDeviceManager.PresentDisk(stimulus.S1Vision, stimulus.S1Orientation);
 
             //S1 Presnetation Begin
             entry.S1PresnetationBegin = Time.time;
             yield return new WaitForSeconds(2f);
             //S1 End
-            entry.S1PresnetationEnd = Time.time;
+            entry.S1End = Time.time;
 
             if (stimulus.Condition != "Vision")
             {
@@ -141,11 +159,9 @@ public class TestingSequence : MonoBehaviour
                 while (!infoInspector.IsTouchWheelReady)
                 { yield return new WaitForSeconds(0.1f); }
             }
+            
             vrDeviceManager.HideDisk(entry.S1Vision);
-            //S1 Presnetation End
-            entry.S1PresnetationEnd = Time.time;
 
- 
 
 
             //S2
@@ -153,12 +169,12 @@ public class TestingSequence : MonoBehaviour
 
             if (stimulus.Condition == "Vision")
             {
-                //Compensation for other Condition's ISI
-                yield return new WaitForSeconds(2.5f);
+                //Compensation for other Condition's ISI, not so important, so tune down to 1s
+                yield return new WaitForSeconds(1f);
             }
             else
             {
-                physicalDeviceManager.WriteSerialData(stimulus.S2Touch);
+                physicalDeviceManager.WriteSerialData(tactileDisksDic[stimulus.S2Touch] + stimulus.S2Steps);
                 while (!infoInspector.IsTouchWheelReady)
                 { yield return new WaitForSeconds(0.1f); }
 
@@ -168,7 +184,7 @@ public class TestingSequence : MonoBehaviour
             }
           
             entry.S2PresnetationBegin = Time.time;
-            vrDeviceManager.PresentDisk(entry.S2Vision);
+            vrDeviceManager.PresentDisk(stimulus.S2Vision, stimulus.S2Orientation);
             yield return new WaitForSeconds(2f);
 
             //S2 Offset
@@ -185,7 +201,7 @@ public class TestingSequence : MonoBehaviour
             vrDeviceManager.HideDisk(entry.S2Vision);
             //Response Cued
             entry.ResponseCued = Time.time;
-            vrDeviceManager.PresentDisk("cue");
+            vrDeviceManager.PresentDisk("cue",0);
 
             while (!infoInspector.IsResponseMade)
             {
@@ -226,6 +242,7 @@ public class TestingSequence : MonoBehaviour
             entry.TrialDuration = entry.TrialEndTime - entry.TrialStartTime;
 
             trialData.Add(entry);
+            index++;
         }
         infoInspector.CurrentBlock++;
         infoInspector.IsBlockRunning = false;
@@ -234,6 +251,7 @@ public class TestingSequence : MonoBehaviour
         DataRecorder.SaveToCSV(dataRecorder.FrameData, "frame");
         dataRecorder.FrameData = new List<FrameDataEntry>();//clear the frame data after saving
         infoInspector.IsTrackerEnabled = true;
+        
     }
 
 }

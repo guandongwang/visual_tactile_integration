@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class InfoInspector : MonoBehaviour
 {
+    [Header("Mode")]
+    public bool IsDebugMode;
+
+    [Space]
     [Header("Session Info")]
     public int id;
     public string initial;
@@ -67,7 +71,13 @@ public class InfoInspector : MonoBehaviour
     void Update()
     {
 
-        IsExperimentReady = !IsBlockRunning && IsTouchWheelReady && IsEyeTrackingCalibrated && CurrentBlock <= NumberOfBlocks;
+        if (IsDebugMode)
+        { IsExperimentReady = !IsBlockRunning && IsTouchWheelReady && CurrentBlock <= NumberOfBlocks; }
+        else 
+        { 
+            IsExperimentReady = !IsBlockRunning && IsTouchWheelReady && IsEyeTrackingCalibrated && CurrentBlock <= NumberOfBlocks; 
+        }
+        
      
     }
 

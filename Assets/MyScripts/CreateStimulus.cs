@@ -7,19 +7,21 @@ using System.Linq;
 public class CreateStimulus : MonoBehaviour
 {
     public List<List<Stimulus>> SessionStimulusCollection;
-
+    InfoInspector infoinspector;
 
     // Start is called before the first frame update
     void Start()
     {
-        SessionStimulusCollection = CreateSessionStimulus();
-            foreach (List<Stimulus> blockStim in SessionStimulusCollection)
-        {
-            foreach (Stimulus stim in blockStim)
-            {
-                Debug.Log(stim.GetValues());
-            }
-        }
+        infoinspector = GetComponent<InfoInspector>();
+        SessionStimulusCollection = CreateSessionStimulus(infoinspector.NumberOfRepetitions, infoinspector.NumberOfBlocks);
+        /*  foreach (List<Stimulus> blockStim in SessionStimulusCollection)
+          {
+              foreach (Stimulus stim in blockStim)
+              {
+                  Debug.Log(stim.GetValues());
+              }
+          }*/
+
     }
 
     // Update is called once per frame
@@ -28,7 +30,7 @@ public class CreateStimulus : MonoBehaviour
 
     }
 
-    List<List<Stimulus>> CreateSessionStimulus()
+    List<List<Stimulus>> CreateSessionStimulus(int numberOfRepetitions, int numberOfBlocks)
     {
         List<string> conditionList = new List<string>() { "Vision", "Touch", "Combine", "VLowerFreqThanT", "VHigherFreqThanT" };
         string referenceDisk = "B11";
@@ -49,8 +51,10 @@ public class CreateStimulus : MonoBehaviour
                 stimulus.StimPairIndex = i;
 
                 Random rnd = new Random();
-                stimulus.S1Orientation = rnd.Next(0, 359);
-                stimulus.S2Orientation = rnd.Next(0, 359);
+                stimulus.S1Steps = rnd.Next(1,200);
+                stimulus.S1Orientation = (float)stimulus.S1Steps * 1.8f;
+                stimulus.S2Steps = rnd.Next(1, 200);
+                stimulus.S2Orientation = (float)stimulus.S2Steps * 1.8f;
 
                 if (i < 5)
                 {
@@ -162,16 +166,15 @@ public class CreateStimulus : MonoBehaviour
         }
 
         //repeat 50 stim 10 times, total 500 trials
-        List<Stimulus> randomizedStim = ShuffleList(RepeatList(stimulusCollection, 10));
+        List<Stimulus> randomizedStim = ShuffleList(RepeatList(stimulusCollection, numberOfRepetitions));
 
         //List<Stimulus> randomizedStim = RepeatList(stimulusCollection, 10);
         List<List<Stimulus>> SessionStimulusCollection = new List<List<Stimulus>>();
 
         int startIndex = 0;
-        int blockTrialNumber = 50;
+        int blockTrialNumber = 10;
         for (int i = 0; i < 10; i++)
         {
-
             // Create a new smaller list and add the range of items to it
             List<Stimulus> blockStim = randomizedStim.GetRange(startIndex, blockTrialNumber);
             SessionStimulusCollection.Add(blockStim);
@@ -180,8 +183,6 @@ public class CreateStimulus : MonoBehaviour
             startIndex += blockTrialNumber;
         }
         return SessionStimulusCollection;
-
-
 
     }
 

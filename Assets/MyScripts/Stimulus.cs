@@ -12,12 +12,12 @@ public class Stimulus
     public int ReferenceLocation { get; set; }
     public string S1Vision { get; set; }
     public string S1Touch { get; set; }
-
-    public int S1Orientation { get; set; }
+    public int S1Steps { get; set; }
+    public float S1Orientation { get; set; }
     public string S2Vision { get; set; }
     public string S2Touch { get; set; }
-
-    public int S2Orientation { get; set; }
+    public int S2Steps { get; set; }
+    public float S2Orientation { get; set; }
     public string TargetResponse { get; set; }
 
     public string GetValues()

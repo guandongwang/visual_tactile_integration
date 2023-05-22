@@ -52,16 +52,17 @@ public class VrDeviceManager : MonoBehaviour
 
 
 
-    public void PresentDisk(string diskName)
+    public void PresentDisk(string diskName, float orientation)
     {
 
         GameObject.Find(diskName).GetComponent<Renderer>().enabled = true;
+        GameObject.Find(diskName).transform.localEulerAngles = new Vector3(0, 0, 90 + orientation);
     }
 
     public void HideDisk(string diskName)
     {
         GameObject.Find(diskName).GetComponent<Renderer>().enabled = false;
-   
+        GameObject.Find(diskName).transform.localEulerAngles = new Vector3(0, 0, 90);
     }
 
 

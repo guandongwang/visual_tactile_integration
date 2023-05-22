@@ -96,6 +96,7 @@ public class PhysicalDeviceManager : MonoBehaviour
                 serialPort.BaseStream.Flush();
                 /*Debug.Log("Sent: " + data);*/
                 infoInspector.IsTouchWheelReady = false;
+                Debug.Log(data);
             }
             catch (System.Exception e)
             {

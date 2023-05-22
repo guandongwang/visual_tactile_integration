@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 31988854}
   - component: {fileID: 31988853}
-  - component: {fileID: 31988858}
   - component: {fileID: 31988857}
   - component: {fileID: 31988856}
   - component: {fileID: 31988855}
@@ -156,14 +155,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5b6ee0389c7d2b45a1462a852a27a9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 3
-  initial: CF
-  age: 18
+  IsDebugMode: 1
+  id: 1
+  initial: test
+  age: 1
   gender: 0
-  condition: 1
   NumberOfBlocks: 10
-  NumberOfRepetitions: 1
-  ReadyToStartBlock: 0
+  NumberOfRepetitions: 10
+  IsExperimentReady: 0
   IsTouchWheelReady: 0
   IsEyeTrackingCalibrated: 0
   IsInputFinished: 0
@@ -201,10 +200,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 31988852}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3330584b38da2c4c9d5d83683429745, type: 3}
+  m_Script: {fileID: 11500000, guid: 1199ad4f772dc364ea83f3b9f70909c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EventLog: 
 --- !u!114 &31988856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,7 +212,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 31988852}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4322ff35042f5c345ba253e2b0c5765d, type: 3}
+  m_Script: {fileID: 11500000, guid: 5aa97c96194804d908b89fe69d84deb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &31988857
@@ -226,24 +224,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 31988852}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 806f1b64ecdc52e4fbbf934fd6ff5948, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tactileReferenceStim: 
-  visualReferenceStim: 
-  tactileDisks: []
-  visualDisks: []
-  blockStimPair: 
---- !u!114 &31988858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 31988852}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1199ad4f772dc364ea83f3b9f70909c1, type: 3}
+  m_Script: {fileID: 11500000, guid: 4322ff35042f5c345ba253e2b0c5765d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &255679606
@@ -277,7 +258,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &255679608
 MonoBehaviour:
@@ -2070,7 +2051,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 463184, guid: cb3370c18187bb444b240cfb08dcc02f, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 463184, guid: cb3370c18187bb444b240cfb08dcc02f, type: 3}
       propertyPath: m_LocalPosition.x
