@@ -57,7 +57,7 @@ public class TestingSequence : MonoBehaviour
         {
             infoInspector.IsTrackerEnabled = false;
             infoInspector.CurrentEvent = "OnBlockStart";
-            Debug.Log("aba");
+            
             StartCoroutine(ExperimentBlock());
             /*EventManager.TriggerEvent("OnBlockStart");*/
         }
@@ -65,14 +65,20 @@ public class TestingSequence : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             // Stop the coroutine if it's running
-            if (infoInspector.IsBlockRunning)
-            {
-                infoInspector.IsBlockRunning = false;
-                StopCoroutine(ExperimentBlock());
-            }
+            ExitSequence();
         }
 
 
+    }
+
+
+    public void ExitSequence()
+    {
+        if (infoInspector.IsBlockRunning)
+        {
+            infoInspector.IsBlockRunning = false;
+            StopCoroutine(ExperimentBlock());
+    }
     }
 /*
     void StartBlock()
@@ -116,20 +122,18 @@ public class TestingSequence : MonoBehaviour
                 infoInspector.initial, infoInspector.age,
                 infoInspector.gender.ToString(),infoInspector.CurrentBlock);
             
+            StimulusToData(stimulus, entry);
+
             entry.TrialNumber = index;
             infoInspector.CurrentTrial = entry.TrialNumber;
-
-            StimulusToData(stimulus, entry);
+            infoInspector.CurrentTrialCondition = entry.Condition;
             
             infoInspector.IsResponseMade = false;
 
             //Trial Start
             entry.TrialStartTime = Time.time;
             infoInspector.CurrentEvent = "Trial " + (entry.TrialNumber) + " start";
-        
-
-            //S1 Begin
-            entry.S1Begin = Time.time;
+           
 
             if (stimulus.Condition == "Vision")
             {
@@ -148,10 +152,11 @@ public class TestingSequence : MonoBehaviour
             vrDeviceManager.PresentDisk(stimulus.S1Vision, stimulus.S1Orientation);
 
             //S1 Presnetation Begin
-            entry.S1PresnetationBegin = Time.time;
+            entry.S1OnsetTime = Time.time;
+
             yield return new WaitForSeconds(2f);
-            //S1 End
-            entry.S1End = Time.time;
+
+            
 
             if (stimulus.Condition != "Vision")
             {
@@ -162,10 +167,11 @@ public class TestingSequence : MonoBehaviour
             
             vrDeviceManager.HideDisk(entry.S1Vision);
 
+            //S1 Offset
+            entry.S1OffsetTime = Time.time;
 
 
-            //S2
-            entry.S2Begin = Time.time;
+           
 
             if (stimulus.Condition == "Vision")
             {
@@ -182,13 +188,14 @@ public class TestingSequence : MonoBehaviour
                 while (!infoInspector.IsTouchWheelReady)
                 { yield return new WaitForSeconds(0.1f); }
             }
-          
-            entry.S2PresnetationBegin = Time.time;
+
+            //S2 Onset time
+            entry.S2OnsetTime = Time.time;
+
             vrDeviceManager.PresentDisk(stimulus.S2Vision, stimulus.S2Orientation);
             yield return new WaitForSeconds(2f);
 
-            //S2 Offset
-            entry.S2End = Time.time;
+   
 
             if (stimulus.Condition != "Vision")
             {
@@ -197,8 +204,10 @@ public class TestingSequence : MonoBehaviour
                 { yield return null; } 
             }
 
-            entry.S2PresnetationEnd = Time.time;
             vrDeviceManager.HideDisk(entry.S2Vision);
+            //S2 Offset time
+            entry.S2OffsetTime = Time.time;
+
             //Response Cued
             entry.ResponseCued = Time.time;
             vrDeviceManager.PresentDisk("cue",0);

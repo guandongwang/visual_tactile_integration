@@ -60,7 +60,7 @@ public class DataRecorder : MonoBehaviour
             frameDataEntry.Frame = Time.frameCount;
             frameDataEntry.Time = Time.time;
             frameDataEntry.TrialNumber = infoInspector.CurrentTrial;
-
+            frameDataEntry.Conditon = infoInspector.CurrentTrialCondition;
             
             frameDataEntry.TouchWheelMessage = infoInspector.TouchWheelMessage;
             frameDataEntry.EventsLog = infoInspector.CurrentEvent;

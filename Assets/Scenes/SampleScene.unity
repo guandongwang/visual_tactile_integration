@@ -155,27 +155,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5b6ee0389c7d2b45a1462a852a27a9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsDebugMode: 1
-  id: 1
-  initial: test
-  age: 1
+  IsDebugMode: 0
+  id: 2
+  initial: JP
+  age: 18
   gender: 0
-  NumberOfBlocks: 10
+  NumberOfBlocks: 20
   NumberOfRepetitions: 10
   IsExperimentReady: 0
   IsTouchWheelReady: 0
   IsEyeTrackingCalibrated: 0
-  IsInputFinished: 0
-  IsStimulusCreated: 0
   IsBlockRunning: 0
   IsResponseMade: 0
-  IsFileSaved: 0
   CurrentBlock: 0
   CurrentTrial: 0
+  CurrentTrialCondition: 
   CurrentEvent: 
   TouchWheelMessage: 
   TryEyeCalibration: 0
   IsTrackerEnabled: 0
+  TryResetTouchwheel: 1
 --- !u!4 &31988854
 Transform:
   m_ObjectHideFlags: 0

@@ -21,7 +21,7 @@ public class CreateStimulus : MonoBehaviour
                   Debug.Log(stim.GetValues());
               }
           }*/
-
+        Debug.Log(SessionStimulusCollection.Count());
     }
 
     // Update is called once per frame
@@ -51,9 +51,9 @@ public class CreateStimulus : MonoBehaviour
                 stimulus.StimPairIndex = i;
 
                 Random rnd = new Random();
-                stimulus.S1Steps = rnd.Next(1,200);
+                stimulus.S1Steps = rnd.Next(-100, 100);
                 stimulus.S1Orientation = (float)stimulus.S1Steps * 1.8f;
-                stimulus.S2Steps = rnd.Next(1, 200);
+                stimulus.S2Steps = rnd.Next(-100, 100);
                 stimulus.S2Orientation = (float)stimulus.S2Steps * 1.8f;
 
                 if (i < 5)
@@ -172,8 +172,8 @@ public class CreateStimulus : MonoBehaviour
         List<List<Stimulus>> SessionStimulusCollection = new List<List<Stimulus>>();
 
         int startIndex = 0;
-        int blockTrialNumber = 10;
-        for (int i = 0; i < 10; i++)
+        int blockTrialNumber = 50 * numberOfRepetitions / numberOfBlocks;
+        for (int i = 0; i < numberOfBlocks; i++)
         {
             // Create a new smaller list and add the range of items to it
             List<Stimulus> blockStim = randomizedStim.GetRange(startIndex, blockTrialNumber);

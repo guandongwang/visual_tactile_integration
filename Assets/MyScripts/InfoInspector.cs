@@ -28,14 +28,14 @@ public class InfoInspector : MonoBehaviour
 
     [Space]
     [Header("Status Trigger")]
-    public bool IsInputFinished;
-    public bool IsStimulusCreated ;
+
     public bool IsBlockRunning ;
     public bool IsResponseMade ;
-    public bool IsFileSaved ;
+
 
     public int CurrentBlock;
     public int CurrentTrial;
+    public string CurrentTrialCondition;
 
     public string CurrentEvent;
     public string TouchWheelMessage;
@@ -45,7 +45,12 @@ public class InfoInspector : MonoBehaviour
     [Header("Action")]
     public bool TryEyeCalibration;
     public bool IsTrackerEnabled;
+    public bool TryResetTouchwheel;
 
+    PhysicalDeviceManager physicalDeviceManager;
+    TestingSequence testingSequence;
+    GameObject device;
+    
 
     //private Condition currentCondition;
     // Start is called before the first frame update
@@ -54,22 +59,26 @@ public class InfoInspector : MonoBehaviour
 
         IsEyeTrackingCalibrated = false;
         IsTouchWheelReady = false;
-        IsInputFinished = false;
-        IsStimulusCreated = false;
         IsBlockRunning = false;
         IsResponseMade = false;
-        IsFileSaved = false;
-
-        CurrentBlock = 1;
 
         IsTrackerEnabled = true;
+        TryResetTouchwheel = false;
 
-        //currentCondition = condition;
+        device = GameObject.Find("Device");
+        physicalDeviceManager = device.GetComponent<PhysicalDeviceManager>();
+        testingSequence = GetComponent<TestingSequence>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (TryResetTouchwheel)
+        {
+            TryResetTouchwheel = false;
+            physicalDeviceManager.WriteSerialData("r");
+        }
+
 
         if (IsDebugMode)
         { IsExperimentReady = !IsBlockRunning && IsTouchWheelReady && CurrentBlock <= NumberOfBlocks; }

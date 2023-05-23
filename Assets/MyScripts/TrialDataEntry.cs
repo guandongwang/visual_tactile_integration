@@ -37,16 +37,11 @@ public class TrialDataEntry : DataEntry
 
     public float TrialStartTime { get; set; }
 
-    public float S1Begin { get; set; }
-    public float S1PresnetationBegin{ get; set; }
-    public float S1End { get; set; }
-    public float S1PresnetationEnd { get; set; }
+    public float S1OnsetTime { get; set; }
+    public float S1OffsetTime{ get; set; }
 
-    public float S2Begin { get; set; }
-    public float S2PresnetationBegin { get; set; }
-    public float S2End { get; set; }
-
-    public float S2PresnetationEnd { get; set; }
+    public float S2OnsetTime { get; set; }
+    public float S2OffsetTime { get; set; }
 
     public float ResponseCued { get; set; }//same as s2 presentation end
     public float ResponseMade { get; set; }
