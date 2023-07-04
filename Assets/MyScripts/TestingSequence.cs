@@ -29,7 +29,7 @@ public class TestingSequence : MonoBehaviour
 
 
 
-        List<string> tactileDisks = new List<string>() { "B3", "B7", "B11", "B15", "B19" };
+        List<string> tactileDisks = new List<string>() { "B1", "B6", "B11", "B16", "B21" };
         tactileDisksDic = new Dictionary<string, string>();
         tactileDisksDic.Add(tactileDisks[0], "a");
         tactileDisksDic.Add(tactileDisks[1], "b");
@@ -68,6 +68,12 @@ public class TestingSequence : MonoBehaviour
             ExitSequence();
         }
 
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            ScreenCapture.CaptureScreenshot("screenshot.png");
+            Debug.Log("A screenshot was taken!");
+        }
+
 
     }
 
@@ -96,7 +102,7 @@ public class TestingSequence : MonoBehaviour
         trialDataEntry.StimPairIndex = stimulus.StimPairIndex;
         trialDataEntry.ReferenceLocation = stimulus.ReferenceLocation;
         trialDataEntry.S1Vision = stimulus.S1Vision;
-        trialDataEntry.S1Touch = stimulus.S1Vision;
+        trialDataEntry.S1Touch = stimulus.S1Touch;
         trialDataEntry.S1Steps = stimulus.S1Steps;
         trialDataEntry.S1Orientation = stimulus.S1Orientation;
         trialDataEntry.S2Vision = stimulus.S2Vision;

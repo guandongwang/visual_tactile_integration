@@ -35,10 +35,10 @@ public class CreateStimulus : MonoBehaviour
         List<string> conditionList = new List<string>() { "Vision", "Touch", "Combine", "VLowerFreqThanT", "VHigherFreqThanT" };
         string referenceDisk = "B11";
 
-        List<string> tactileDisks = new List<string>() { "B3", "B7", "B11", "B15", "B19" };
-        List<string> visualDisk = new List<string>() { "B3", "B7", "B11", "B15", "B19" };
-        List<string> visualDiskLow = new List<string>() { "B1", "B3", "B7", "B11", "B15" };
-        List<string> visualDiskHigh = new List<string>() { "B7", "B11", "B15", "B19", "B21" };
+        List<string> tactileDisks = new List<string>() { "B1", "B6", "B11", "B16", "B21" };
+        List<string> visualDisk = new List<string>() { "B1", "B6", "B11", "B16", "B21" };
+        List<string> visualDiskLow = new List<string>() { "B-4", "B1", "B6", "B11", "B16" };
+        List<string> visualDiskHigh = new List<string>() { "B6", "B11", "B16", "B21", "B26" };
 
         List<Stimulus> stimulusCollection = new List<Stimulus>();
 
@@ -103,15 +103,13 @@ public class CreateStimulus : MonoBehaviour
                     switch (condition)
                     {
                         case ("Vision"):
-                            stimulus.S1Vision = visualDisk[i-5];
-                            
+                            stimulus.S1Vision = visualDisk[i-5];  
                             stimulus.S1Touch = "dummy";
                             stimulus.S2Vision = referenceDisk;
                             stimulus.S2Touch = "dummy";
                             break;
                         case ("Touch"):
                             stimulus.S1Vision = "dummy";
-                            
                             stimulus.S1Touch = tactileDisks[i-5];
                             stimulus.S2Vision = "dummy";
                             stimulus.S2Touch = referenceDisk;
@@ -124,7 +122,6 @@ public class CreateStimulus : MonoBehaviour
                             break;
                         case ("VLowerFreqThanT"):
                             stimulus.S1Vision = visualDiskLow[i - 5];
-                           
                             stimulus.S1Touch = tactileDisks[i - 5];
                             stimulus.S2Vision = referenceDisk;
                             stimulus.S2Touch = referenceDisk;
